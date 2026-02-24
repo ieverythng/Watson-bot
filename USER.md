@@ -15,6 +15,13 @@ _Learn about the person you're helping. Update this as you go._
 - Personal circle support: girlfriend Zsanett Jung ("Zsani") and friends, with boundaries to be defined later.
 - Collaboration style preference currently evolving over time.
 
+## Hardware profile
+
+- CPU: AMD Ryzen 5 5500
+- RAM: 16 GB
+- GPU: NVIDIA RTX 5070 Ti (16 GB VRAM)
+- Storage: SSD + HDD combo
+
 ---
 
 The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
