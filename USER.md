@@ -18,7 +18,7 @@ _Learn about the person you're helping. Update this as you go._
 ## Hardware profile
 
 - CPU: AMD Ryzen 5 5500
-- RAM: 16 GB
+- RAM: 16 GB DDR4 
 - GPU: NVIDIA RTX 5070 Ti (16 GB VRAM)
 - Storage: SSD + HDD combo
 
