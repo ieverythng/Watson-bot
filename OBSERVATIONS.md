@@ -30,3 +30,11 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: OpenClaw memory indexing stays empty until a memory embedding provider is configured.
   - `evidence`: `reports/openclaw/mainpc-om-validation-2026-02-25T22-01-25Z.md`
   - `expires`: none
+
+- `id`: O-2026-03-09-01
+  - `timestamp`: 2026-03-09T21:58:00Z
+  - `scope`: process
+  - `confidence`: 0.96
+  - `observation`: WatsonOW installation tasks were initiated and core bootstrap artifacts were created in recipes/skills/expenditure paths under workspace constraints.
+  - `evidence`: `reports/recipes/00-watsonow-operating-system.md`, `reports/recipes/01-om-loop.md`, `reports/recipes/02-delegation-contracts.md`, `reports/recipes/03-skills-authoring.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `skills/expenditure-tracker/SKILL.md`
+  - `expires`: none
