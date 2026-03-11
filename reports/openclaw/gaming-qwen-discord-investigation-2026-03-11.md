@@ -323,3 +323,106 @@ Best strategy:
 ## Discord
 Very doable.
 Start with DM pairing, then private guild, then structured channels.
+
+## 6. Additional bottleneck findings (follow-up)
+
+### Temp folder safety
+`C:\Users\Admin\AppData\Local\Temp` is about **4.0 GB**.
+
+Rule of thumb:
+- it is generally safe to delete the **contents** of this Temp folder
+- do **not** delete the Temp folder itself
+- skip files/folders that are in use or refuse deletion
+- avoid doing it while installers, updates, MATLAB, package managers, or large exports are actively running
+
+Best practical approach:
+- close major apps first
+- if possible, reboot once
+- delete Temp contents with WizTree / Explorer / Storage Sense
+- ignore any locked files that remain
+
+### WSL / Ubuntu reality
+Confirmed WSL distro state:
+- `Ubuntu` running under WSL2
+- `docker-desktop` WSL distro present (stopped)
+
+Confirmed WSL Ubuntu storage file on C:
+- `C:\Users\Admin\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc\LocalState\ext4.vhdx`
+- package footprint around **30 GB**
+
+Implication:
+- the Ubuntu size you are seeing is very likely the **WSL Ubuntu virtual disk**
+- WSL Ubuntu is **not the same thing** as a standalone dual-boot Ubuntu install
+- WSL lives inside Windows as a virtualized Linux environment stored in a VHDX file on the Windows filesystem
+
+### Defender / Antimalware findings
+Confirmed:
+- Defender real-time protection: enabled
+- Behavior monitoring: enabled
+- Tamper protection: enabled
+- Scan CPU load factor: **50**
+- Quick scan age: **0** (meaning a quick scan ran today)
+- `MsMpEng` is present and active
+
+Implication:
+- Defender can absolutely cause visible spikes during gaming or development I/O
+- removing Defender is not the right move here
+- the smarter route is **scheduling + exclusions + startup cleanup**
+
+### Startup junk / background bloat
+Startup list includes many likely gaming-tax candidates:
+- Ollama
+- Logitech G Hub
+- Teams (two entries)
+- Discord
+- Battle.net
+- EA app
+- Riot Client
+- Epic Games Launcher
+- BlueStacks services
+- Docker Desktop
+- Adobe Acrobat Synchronizer
+- MathWorks Service Host
+- SOLIDWORKS fast start / downloader
+- Corsair iCUE launcher
+- Autodesk Access / service
+- iTunesHelper
+- Web Companion
+
+Especially suspicious / low-value for a gaming machine:
+- **Web Companion** (strong uninstall candidate)
+- Docker Desktop auto-start
+- Ollama auto-start
+- Battle.net / EA / Riot / Epic all launching at boot
+- Adobe sync
+- Autodesk Access auto-launch
+- SOLIDWORKS background helpers
+- Teams duplicates
+
+### SSD vs HDD trade-offs
+#### Games
+Competitive / modern streaming-heavy games should stay on SSD when possible.
+Moving Marathon or Marvel Rivals to HDD may increase:
+- load times
+- asset streaming hitching
+- texture pop / stutter risk
+
+So your instinct is correct:
+- keep your actively played competitive games on SSD
+- move cold / story / archival games to HDD
+
+#### Local models
+Moving local LLM weights to HDD is usually acceptable **if you can tolerate slower model load/startup time**.
+Steady-state inference may be less affected once weights are loaded into RAM/VRAM, but startup and cache misses will be slower.
+
+#### ML libraries / Python envs
+These *can* live on HDD, but SSD is nicer for:
+- package installs
+- imports
+- environment creation
+- notebooks
+- dataset indexing
+
+#### WSL Ubuntu
+If WSL is an active development environment, it is better on SSD.
+Moving WSL to HDD would likely make Linux-side package management, git operations, builds, and file traversal feel noticeably worse.
