@@ -14,8 +14,13 @@ This file is not append-only. Keep it short, stable, and evidence-backed.
 
 - `D-2026-02-25-01`: Use staged workflow for repo changes.
   - Decision: Stage changes first for review in Cursor; commit only after explicit go-ahead.
+  - Status: superseded
+  - Evidence: earlier thread instruction
+
+- `D-2026-03-11-02`: Default Watson repo workflow is auto-commit.
+  - Decision: Automatically commit changes Watson makes in this workspace unless Juan explicitly asks for review/staging-only.
   - Status: active
-  - Evidence: active thread instruction
+  - Evidence: direct user instruction on 2026-03-11
 
 ## Current Priorities
 

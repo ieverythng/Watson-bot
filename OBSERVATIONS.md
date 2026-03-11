@@ -46,3 +46,11 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: WatsonOW harness files were tightened around workspace boundaries, staged-first git control, budget-aware model routing, and reusable skill conventions.
   - `evidence`: `AGENTS.md`, `HEARTBEAT.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `reports/recipes/00-watsonow-operating-system.md`, `reports/recipes/03-skills-authoring.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `skills/expenditure-tracker/SKILL.md`
   - `expires`: none
+
+- `id`: O-2026-03-11-01
+  - `timestamp`: 2026-03-11T01:42:00Z
+  - `scope`: infra
+  - `confidence`: 0.93
+  - `observation`: OpenClaw model fallbacks were updated to include `ollama/qwen3.5:9b` as a configured local option for upcoming delegated passthrough roles, without switching the default model.
+  - `evidence`: `openclaw models fallbacks list`, `openclaw models list` (2026-03-11)
+  - `expires`: none
