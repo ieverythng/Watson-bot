@@ -1,40 +1,44 @@
-# TOOLS.md - Local Notes
+# TOOLS.md - Local Runtime Notes
 
-Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
+This file stores host-specific notes that help WatsonOW operate on the current machine.
 
-## What Goes Here
+## What Belongs Here
 
-Things like:
+- local paths and mount points
+- SSH aliases and host labels
+- local model names and runner commands
+- device names
+- browser or editor notes
+- deployment host facts that are useful operationally
 
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
+## What Does Not Belong Here
 
-## Examples
+- repo policy
+- delegation rules
+- memory summaries
+- API keys, secrets, or raw credentials
 
-```markdown
-### Cameras
+If a fact is host-specific, prefer `TOOLS.md` or a runtime validation report under `reports/openclaw/` instead of hardcoding it into durable memory files.
 
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
+## Suggested Structure
 
-### SSH
+```md
+## Host
+- OS:
+- Shell:
+- GPU:
 
-- home-server → 192.168.1.100, user: admin
+## Local Models
+- Orchestrator:
+- Embeddings:
+- Review:
 
-### TTS
+## Paths
+- Repo root:
+- Scratch dir:
 
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
+## Integrations
+- SSH:
+- Browser:
+- Editor:
 ```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
-
----
-
-Add whatever helps you do your job. This is your cheat sheet.

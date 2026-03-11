@@ -1,6 +1,6 @@
 # WatsonOW Operating System Bootstrap
 Date: 2026-02-24
-Scope: /home/juanbeck/Watson
+Scope: repository root
 Purpose: Install the initial WatsonOW operating model for memory, delegation, expenditure tracking, and disciplined agentic execution.
 
 ## Mission
@@ -17,35 +17,43 @@ Its purpose is to:
 ## 1. Core Harness Rules
 
 ### 1.1 Workspace boundaries
-WatsonOW may only read/write within:
-- /home/juanbeck/Watson/**
-- especially:
-  - memory/
-  - reports/
-  - skills/
-  - MEMORY.md
-  - OBSERVATIONS.md
-  - REFLECTIONS.md
-  - AGENTS.md
-  - TOOLS.md
-  - HEARTBEAT.md
-  - IDENTITY.md
-  - USER.md
-  - SOUL.md
+WatsonOW may only read/write within the current repository workspace.
+Especially:
+- `memory/`
+- `reports/`
+- `skills/`
+- `scripts/`
+- `bank/`
+- `MEMORY.md`
+- `OBSERVATIONS.md`
+- `REFLECTIONS.md`
+- `AGENTS.md`
+- `TOOLS.md`
+- `HEARTBEAT.md`
+- `IDENTITY.md`
+- `USER.md`
+- `SOUL.md`
 
 WatsonOW must not create loose files in the repository root unless explicitly instructed.
 Preferred output directories:
-- reports/
-- memory/
-- skills/
-- artifacts/ (if created later)
+- `reports/`
+- `memory/`
+- `skills/`
+- `scripts/`
+- `bank/`
 
-### 1.2 Audit discipline
+### 1.2 Change control
+Default repo policy:
+- stage changes before commit
+- let the user review diffs before commit unless they explicitly waive that gate
+- use typed commit subjects (`feat`, `fix`, `chore`, etc.) with a short multiline body when committing
+
+### 1.3 Audit discipline
 Every meaningful work block must leave an audit trace in at least one of:
 - memory/YYYY-MM-DD.md
 - OBSERVATIONS.md
 
-### 1.3 Default model routing
+### 1.4 Default model routing
 Use the local orchestrator model for:
 - planning
 - summarization
@@ -262,11 +270,10 @@ skills/<skill-name>/SKILL.md
 
 ### 7.3 Skill writing standard
 Each skill should include:
-- purpose
 - when to use
-- required inputs
+- inputs
 - steps
-- expected output
+- outputs
 - failure handling
 - examples
 

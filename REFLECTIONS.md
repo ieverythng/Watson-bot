@@ -46,3 +46,27 @@ This file is periodic and curated, not turn-by-turn.
   - `evidence`:
     - `reports/recipes/00-watsonow-operating-system.md`
     - active user instructions (2026-03-09)
+
+- `id`: R-2026-03-10-01
+  - `window`: 2026-03-10
+  - `themes`:
+    - WatsonOW should operate as a strict repo harness, not a general personal-assistant workspace.
+    - Core skills need a shared authoring standard plus deterministic inputs, outputs, and failure handling.
+    - Delegation can now plug into clearer roles, review gates, and budget-aware routing rules.
+  - `durable_updates`:
+    - Git flow for this repo should remain staged-first, with typed commit subjects and short multiline bodies when commits are requested.
+    - Host-specific runtime facts should live in `TOOLS.md` or runtime reports, not in durable shared memory by default.
+  - `conflicts`:
+    - None identified in the current harness rewrite.
+  - `actions`:
+    - Test the updated skills and harness behavior on the main PC runtime.
+    - Implement delegation contracts and role execution flow next, using the hardened `AGENTS.md` as the control layer.
+  - `evidence`:
+    - `AGENTS.md`
+    - `HEARTBEAT.md`
+    - `TOOLS.md`
+    - `reports/recipes/00-watsonow-operating-system.md`
+    - `reports/recipes/03-skills-authoring.md`
+    - `skills/memory-observer/SKILL.md`
+    - `skills/memory-reflector/SKILL.md`
+    - `skills/expenditure-tracker/SKILL.md`

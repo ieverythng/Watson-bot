@@ -1,27 +1,72 @@
-# Recipe 03 - Skills Authoring
+# Recipe 03 - Skills Authoring Standard
 
 ## Purpose
-Create maintainable skills with progressive disclosure and predictable outputs.
+Create lean, reusable skills that are easy to trigger, audit, and extend.
 
 ## Folder Convention
+Use one folder per skill:
+
 `skills/<skill-name>/SKILL.md`
 
-## Minimum Sections
-- Purpose
-- When to use
-- Required inputs
-- Steps
-- Expected output
-- Failure handling
-- Examples
+Do not create extra README or changelog files for a skill unless the skill truly needs scripts or references.
 
-## Authoring Rules
-- Keep steps deterministic and testable.
-- Prefer explicit file paths and schemas.
-- Include guardrails for scope and safety.
-- Record version/date changes in the skill file.
+## Required File Format
+Each `SKILL.md` must start with YAML frontmatter:
 
-## Initial WatsonOW Skills
-- `memory-observer`
-- `memory-reflector`
-- `expenditure-tracker`
+```yaml
+---
+name: skill-name
+description: Clear trigger description that says when the skill should be used.
+---
+```
+
+## Required Sections
+Each skill must include these sections in this order:
+- `When to Use`
+- `Inputs`
+- `Steps`
+- `Outputs`
+- `Failure Handling`
+- `Examples`
+
+## Writing Rules
+- Keep the description specific enough to trigger correctly.
+- Keep steps deterministic and tied to repo paths.
+- Prefer explicit schemas and short examples over long prose.
+- Default to the current workspace only.
+- State what the skill must not do when that boundary matters.
+- If exact values are often unavailable, specify the fallback estimate format.
+
+## Optional Extensions
+Add extra files only when they reduce repeat work:
+- `scripts/` for deterministic helpers
+- `references/` for material too large for `SKILL.md`
+
+## Standard Template
+
+```md
+---
+name: example-skill
+description: Use this skill when ...
+---
+
+# Example Skill
+
+## When to Use
+- ...
+
+## Inputs
+- ...
+
+## Steps
+1. ...
+
+## Outputs
+- ...
+
+## Failure Handling
+- ...
+
+## Examples
+- ...
+```

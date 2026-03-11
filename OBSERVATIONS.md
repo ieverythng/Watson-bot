@@ -38,3 +38,11 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: WatsonOW installation tasks were initiated and core bootstrap artifacts were created in recipes/skills/expenditure paths under workspace constraints.
   - `evidence`: `reports/recipes/00-watsonow-operating-system.md`, `reports/recipes/01-om-loop.md`, `reports/recipes/02-delegation-contracts.md`, `reports/recipes/03-skills-authoring.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `skills/expenditure-tracker/SKILL.md`
   - `expires`: none
+
+- `id`: O-2026-03-10-01
+  - `timestamp`: 2026-03-09T23:12:47Z
+  - `scope`: process
+  - `confidence`: 0.98
+  - `observation`: WatsonOW harness files were tightened around workspace boundaries, staged-first git control, budget-aware model routing, and reusable skill conventions.
+  - `evidence`: `AGENTS.md`, `HEARTBEAT.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `reports/recipes/00-watsonow-operating-system.md`, `reports/recipes/03-skills-authoring.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `skills/expenditure-tracker/SKILL.md`
+  - `expires`: none

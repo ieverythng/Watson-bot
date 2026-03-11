@@ -1,7 +1,14 @@
 # HEARTBEAT.md
 
-Read reports/recipes/00-watsonow-operating-system.md when installing or updating WatsonOW behavior
+Default heartbeat behavior for WatsonOW:
 
-# Keep this file empty (or with only comments) to skip heartbeat API calls.
+- If no active checklist exists below, reply `HEARTBEAT_OK`.
+- Keep heartbeat work low-cost and workspace-bound.
+- Do not spawn delegates from a heartbeat unless the checklist explicitly requires it.
+- Do not start broad implementation work from a heartbeat.
+- If a heartbeat performs a meaningful check, leave a short audit line in `memory/YYYY-MM-DD.md`.
+- If a heartbeat reveals a real issue, report it clearly and stop unless the checklist already authorizes the next step.
 
-# Add tasks below when you want the agent to check something periodically.
+## Active Checklist
+
+Add temporary heartbeat tasks here when needed.
