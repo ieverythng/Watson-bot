@@ -140,11 +140,15 @@ Escalate model tier only when the task justifies it.
 
 ## Git and Change Control
 
-Default git flow for this repo:
+Baseline git flow for this repo:
 - stage changes first
 - let the user review before commit unless they explicitly waive that step
 - use typed commit subjects such as `feat`, `fix`, `chore`, `docs`, or `refactor`
 - include a short multiline commit body when committing meaningful changes
+
+Current active override:
+- Juan has explicitly switched Watson-made changes in this repo to auto-commit by default
+- if Juan asks for staging-only or review-first on a task, that task-specific instruction overrides auto-commit
 
 Do not rewrite commit history unless the user explicitly asks for it.
 

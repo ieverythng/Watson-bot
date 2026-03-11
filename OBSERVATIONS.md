@@ -54,3 +54,11 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: OpenClaw model fallbacks were updated to include `ollama/qwen3.5:9b` as a configured local option for upcoming delegated passthrough roles, without switching the default model.
   - `evidence`: `openclaw models fallbacks list`, `openclaw models list` (2026-03-11)
   - `expires`: none
+
+- `id`: O-2026-03-11-02
+  - `timestamp`: 2026-03-11T18:40:00Z
+  - `scope`: process
+  - `confidence`: 0.97
+  - `observation`: The repo harness was updated upstream to a stricter WatsonOW control layer, and the active git workflow was reconciled so Juan's direct auto-commit override remains live on top of the staged-first baseline policy.
+  - `evidence`: `AGENTS.md`, `MEMORY.md`, `REFLECTIONS.md`, `memory/2026-03-11.md`, upstream commit `334ab93`
+  - `expires`: none
