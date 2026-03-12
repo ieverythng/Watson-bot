@@ -84,6 +84,18 @@ Primary roles:
 - `WatsonOW-Dev`: repo/code executor
 - `WatsonOW-Review`: verifier and reviewer
 
+Runtime agent mapping:
+- `main`: front-facing low-cost orchestrator/router; default lane for user interaction
+- `memory`: OM observer/reflector and memory maintenance lane
+- `dev`: execution lane for code edits, runtime work, and implementation
+- `review`: verification lane for scope checks, findings, and acceptance review
+
+Main-agent routing rule:
+- On `main`, keep work to intake, reading, light writing, planning, and delegation.
+- For execution, verification, or memory maintenance, spawn the role agent explicitly with `sessions_spawn(agentId=...)`.
+- Prefer targeting role agents (`dev`, `review`, `memory`) over choosing worker models by name.
+- If delegation fails, report the failure and retry strategy; do not silently fall back to ad-hoc self-execution.
+
 Delegation policy:
 - default to no delegate
 - default maximum is one active delegate

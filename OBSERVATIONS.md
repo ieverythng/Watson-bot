@@ -62,3 +62,49 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: The repo harness was updated upstream to a stricter WatsonOW control layer, and the active git workflow was reconciled so Juan's direct auto-commit override remains live on top of the staged-first baseline policy.
   - `evidence`: `AGENTS.md`, `MEMORY.md`, `REFLECTIONS.md`, `memory/2026-03-11.md`, upstream commit `334ab93`
   - `expires`: none
+
+- `id`: O-2026-03-11-03
+  - `timestamp`: 2026-03-11T23:02:41Z
+  - `scope`: infra
+  - `confidence`: 0.98
+  - `observation`: In the current WSL/OpenClaw runtime, Ollama is reachable on `127.0.0.1:11434`, while the configured `172.24.16.1:11434/v1` endpoint is stale and causes a false appearance that `qwen3.5:9b` is available even though local Ollama currently exposes only `gpt-oss:20b-cloud`.
+  - `evidence`: `~/.openclaw/openclaw.json`, `~/.openclaw/agents/main/agent/models.json`, `openclaw status`, `openclaw models list`, `ollama list`, localhost `/api/tags` probe
+  - `expires`: 2026-03-18
+
+- `id`: O-2026-03-11-04
+  - `timestamp`: 2026-03-11T23:06:50Z
+  - `scope`: infra
+  - `confidence`: 0.99
+  - `observation`: This machine currently has two active Ollama installations: a WSL/Linux `0.15.4` daemon on `127.0.0.1:11434` and a Windows `0.17.7` installation reachable from WSL at `172.24.16.1:11434`; the Windows side holds the real `qwen3.5:9b` model.
+  - `evidence`: `/usr/local/bin/ollama`, `/etc/systemd/system/ollama.service`, `/mnt/c/Users/Admin/AppData/Local/Programs/Ollama/ollama.exe`, `/mnt/c/Users/Admin/.ollama/models/manifests/registry.ollama.ai/library/qwen3.5/9b`, `/api/version` and `/api/tags` probes
+  - `expires`: 2026-03-18
+---OM LOOP 2026-03-12---
+
+## 2026-03-12T00:24:00Z
+- Trigger: User-initiated OM loop with delegation workflow
+- Scope: Review recent work, condense patterns, prepare next actions
+- Status: In progress (observer step complete)
+
+- `id`: O-2026-03-11-05
+  - `timestamp`: 2026-03-11T23:28:36Z
+  - `scope`: infra
+  - `confidence`: 0.98
+  - `observation`: After switching OpenClaw to the native Windows Ollama endpoint, `qwen3.5:9b` performs real tool calls in-session; session clutter can be reduced by using named session keys and patched labels instead of `/new`-minted `tui-*` sessions.
+  - `evidence`: `openclaw gateway call sessions.patch --params '{"key":"agent:main:test-2","model":"ollama/qwen3.5:9b"}' --json`, `openclaw agent --session-id e5d12c68-d66b-4582-bf2f-ed103b0993cf ... --json`, `/home/juanbeck/.openclaw/agents/main/sessions/e5d12c68-d66b-4582-bf2f-ed103b0993cf.jsonl`, `openclaw gateway call sessions.patch --params '{"key":"agent:main:test-2","label":"Qwen tool test"}' --json`
+  - `expires`: 2026-03-18
+
+- `id`: O-2026-03-12-01
+  - `timestamp`: 2026-03-12T00:05:00Z
+  - `scope`: infra
+  - `confidence`: 0.96
+  - `observation`: OpenClaw now has a non-default `router` agent pinned to `ollama/qwen3.5:9b`, with Qwen restricted to read/write/session tools while spawned subagents default to `openai-codex/gpt-5.4`; this keeps the Codex execution lane intact while testing the orchestrator pattern safely.
+  - `evidence`: `~/.openclaw/openclaw.json`, `openclaw status`, `openclaw agents list`
+  - `expires`: 2026-03-19
+
+- `id`: O-2026-03-12-02
+  - `timestamp`: 2026-03-12T00:56:00Z
+  - `scope`: process
+  - `confidence`: 0.95
+  - `observation`: OM review confirms the current operating stack is: OM pipeline build as the top repo priority, staged-first as the baseline harness policy with Juan's auto-commit override active, and Qwen-router/Codex-executor as the live delegation pattern.
+  - `evidence`: `MEMORY.md`, `REFLECTIONS.md`, `OBSERVATIONS.md`, `memory/2026-03-12.md`
+  - `expires`: 2026-03-19
