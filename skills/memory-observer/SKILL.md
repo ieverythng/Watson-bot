@@ -6,6 +6,7 @@ description: Use this skill after meaningful work blocks, tool runs, or repo/pol
 # Memory Observer
 
 ## When to Use
+- Typically executed by `WatsonOW-Memory`
 - After a meaningful tool run or implementation block
 - After repo, config, harness, or policy changes
 - After a review that found important risk or scope information
@@ -33,6 +34,7 @@ description: Use this skill after meaningful work blocks, tool runs, or repo/pol
    - `evidence`
    - `expires`
 5. If the observation suggests a durable policy or belief, note that as a reflection candidate in the daily file. Do not update `MEMORY.md` directly from this skill.
+6. If the active role is not `WatsonOW-Memory`, write the daily audit trace and return the observation as a proposal instead of updating durable lanes directly.
 
 ## Outputs
 - One daily audit entry in `memory/YYYY-MM-DD.md`

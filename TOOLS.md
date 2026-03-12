@@ -42,3 +42,23 @@ If a fact is host-specific, prefer `TOOLS.md` or a runtime validation report und
 - Browser:
 - Editor:
 ```
+
+## Common Command Patterns
+
+Use simple, repeatable commands first:
+- file listing: `rg --files`
+- text search: `rg -n "pattern" path`
+- file preview: `sed -n '1,200p' file`
+- repo status: `git status --short`
+- repo delta: `git diff --stat`
+- recent history: `git log --oneline -n 5`
+
+## Tool Failure Rule
+
+If a command or tool fails:
+- report the exact failure
+- say what it blocked
+- try one clear fallback only if it stays in scope
+- otherwise delegate or stop
+
+Do not claim success after a failed tool call.

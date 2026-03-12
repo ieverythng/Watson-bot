@@ -21,7 +21,7 @@ This file is periodic and curated, not turn-by-turn.
     - Build OM memory architecture in staged, testable phases.
     - Keep markdown canonical and compression auditable.
   - `durable_updates`:
-    - Stage-first workflow promoted to durable process memory.
+    - Earlier stage-first workflow note was later superseded by the 2026-03-11 auto-commit override.
   - `conflicts`:
     - None identified yet.
   - `actions`:
@@ -39,7 +39,7 @@ This file is periodic and curated, not turn-by-turn.
   - `durable_updates`:
     - Canonical reflections file standardized as `REFLECTIONS.md`.
   - `conflicts`:
-    - Legacy file name `REFFLECTIONS.md` still exists and should be treated as compatibility alias until explicitly retired.
+    - Historical notes still mention `REFFLECTIONS.md`, but the live repo now uses `REFLECTIONS.md` only.
   - `actions`:
     - Complete installation checklist artifacts under `reports/recipes/`, `reports/expenditure/`, and `skills/*`.
     - Keep a per-day expenditure ledger when installation blocks are executed.
@@ -54,7 +54,7 @@ This file is periodic and curated, not turn-by-turn.
     - Core skills need a shared authoring standard plus deterministic inputs, outputs, and failure handling.
     - Delegation can now plug into clearer roles, review gates, and budget-aware routing rules.
   - `durable_updates`:
-    - Baseline git flow for this repo should remain staged-first, with typed commit subjects and short multiline bodies when commits are requested.
+    - Baseline git flow for this repo was defined as staged-first with typed commit subjects and short multiline bodies, then superseded operationally by Juan's 2026-03-11 auto-commit override.
     - Host-specific runtime facts should live in `TOOLS.md` or runtime reports, not in durable shared memory by default.
   - `conflicts`:
     - None identified in the current harness rewrite.
@@ -89,3 +89,24 @@ This file is periodic and curated, not turn-by-turn.
     - `MEMORY.md`
     - `memory/2026-03-11.md`
     - direct user instructions on 2026-03-11
+
+- `id`: R-2026-03-12-01
+  - `window`: 2026-03-12
+  - `themes`:
+    - OM only works reliably when retrieval order, write ownership, and promotion gates are explicit.
+    - Qwen should read memory broadly enough to route work, but durable memory writes should stay with the memory role.
+    - Review is valuable as recipe-ground-truth QA for both delegation and memory hygiene.
+  - `durable_updates`:
+    - `WatsonOW-Memory` owns durable memory writes by default.
+    - Long transcripts and test dumps should live in reports, not active operational memory lanes.
+  - `conflicts`:
+    - Qwen tool reliability remains uneven; command guidance may help, but runtime/toolchain behavior still needs empirical testing.
+  - `actions`:
+    - Run fresh Qwen delegation tests against the hardened OM loop and contract fields.
+    - Decide whether to add a dedicated memory-QA or review skill once the updated loop is exercised.
+  - `evidence`:
+    - `reports/recipes/01-om-loop.md`
+    - `reports/recipes/02-delegation-contracts.md`
+    - `AGENTS.md`
+    - `TOOLS.md`
+    - active user instructions on 2026-03-12

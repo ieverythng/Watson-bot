@@ -9,7 +9,7 @@ Stable environment and infrastructure facts that affect decisions.
 
 ## Platform Constraints
 
-- Edits should be staged before commit for human review.
+- Git workflow expectations may be overridden by direct user instruction; check `MEMORY.md`, `AGENTS.md`, and the current task before assuming stage-first or auto-commit.
 - External/public actions require explicit confirmation.
 - Memory system should stay auditable and provenance-backed.
 

@@ -21,7 +21,7 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `confidence`: 0.95
   - `observation`: User requires staged diffs before any commit.
   - `evidence`: active thread instruction (Codex)
-  - `expires`: none
+  - `expires`: 2026-03-11
 
 - `id`: O-2026-02-25-02
   - `timestamp`: 2026-02-25T22:01:25Z
@@ -43,9 +43,9 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `timestamp`: 2026-03-09T23:12:47Z
   - `scope`: process
   - `confidence`: 0.98
-  - `observation`: WatsonOW harness files were tightened around workspace boundaries, staged-first git control, budget-aware model routing, and reusable skill conventions.
+  - `observation`: WatsonOW harness files were tightened around workspace boundaries, git change control, budget-aware model routing, and reusable skill conventions.
   - `evidence`: `AGENTS.md`, `HEARTBEAT.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `reports/recipes/00-watsonow-operating-system.md`, `reports/recipes/03-skills-authoring.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `skills/expenditure-tracker/SKILL.md`
-  - `expires`: none
+  - `expires`: 2026-03-11
 
 - `id`: O-2026-03-11-01
   - `timestamp`: 2026-03-11T01:42:00Z
@@ -78,12 +78,6 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: This machine currently has two active Ollama installations: a WSL/Linux `0.15.4` daemon on `127.0.0.1:11434` and a Windows `0.17.7` installation reachable from WSL at `172.24.16.1:11434`; the Windows side holds the real `qwen3.5:9b` model.
   - `evidence`: `/usr/local/bin/ollama`, `/etc/systemd/system/ollama.service`, `/mnt/c/Users/Admin/AppData/Local/Programs/Ollama/ollama.exe`, `/mnt/c/Users/Admin/.ollama/models/manifests/registry.ollama.ai/library/qwen3.5/9b`, `/api/version` and `/api/tags` probes
   - `expires`: 2026-03-18
----OM LOOP 2026-03-12---
-
-## 2026-03-12T00:24:00Z
-- Trigger: User-initiated OM loop with delegation workflow
-- Scope: Review recent work, condense patterns, prepare next actions
-- Status: In progress (observer step complete)
 
 - `id`: O-2026-03-11-05
   - `timestamp`: 2026-03-11T23:28:36Z
@@ -108,3 +102,11 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: OM review confirms the current operating stack is: OM pipeline build as the top repo priority, staged-first as the baseline harness policy with Juan's auto-commit override active, and Qwen-router/Codex-executor as the live delegation pattern.
   - `evidence`: `MEMORY.md`, `REFLECTIONS.md`, `OBSERVATIONS.md`, `memory/2026-03-12.md`
   - `expires`: 2026-03-19
+
+- `id`: O-2026-03-12-03
+  - `timestamp`: 2026-03-12T01:36:20Z
+  - `scope`: process
+  - `confidence`: 0.98
+  - `observation`: OM control logic now defines deterministic retrieval order, role-owned durable memory writes, explicit promotion/pruning rules, and required reporting of tool failures instead of silent no-ops.
+  - `evidence`: `reports/recipes/01-om-loop.md`, `reports/recipes/02-delegation-contracts.md`, `AGENTS.md`, `TOOLS.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `MEMORY.md`
+  - `expires`: none

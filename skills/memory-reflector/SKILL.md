@@ -6,6 +6,7 @@ description: Use this skill at milestones, session boundaries, or when observati
 # Memory Reflector
 
 ## When to Use
+- Owned by `WatsonOW-Memory`
 - At the end of a meaningful session or milestone
 - When `OBSERVATIONS.md` has accumulated repeated signals
 - When repo direction, workflow, or policy changed

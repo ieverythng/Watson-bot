@@ -4,9 +4,9 @@ Execution learnings that should inform future behavior.
 
 ## Learned Patterns
 
-- Staged-review workflow improves trust and reduces accidental regressions.
+- Explicit git workflow declarations improve trust and reduce accidental regressions.
   - Confidence: 0.95
-  - Evidence: active thread request (2026-02-25)
+  - Evidence: user workflow instructions across 2026-02-25 and 2026-03-11
 
 - Keeping markdown as canonical memory reduces brittleness and improves debugging.
   - Confidence: 0.90

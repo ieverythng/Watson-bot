@@ -60,6 +60,9 @@ Rules:
 - Every durable claim should have evidence.
 - Prefer updating existing durable entries over duplicating them.
 - When a work block matters, leave an audit trace in `memory/YYYY-MM-DD.md` and, if operationally useful, in `OBSERVATIONS.md`.
+- `WatsonOW-Main` may propose memory promotions, but `WatsonOW-Memory` owns durable memory writes.
+- `WatsonOW-Dev` writes daily audit traces only, not durable memory lanes.
+- `WatsonOW-Review` checks recipe compliance and memory hygiene whenever memory outputs changed.
 
 ## Skills
 
@@ -101,6 +104,7 @@ Delegation policy:
 - default maximum is one active delegate
 - use two active delegates only when tasks are independent and the gain is obvious
 - do not create a swarm by default
+- if multiple Dev delegates are used, each must have a disjoint file scope and a defined merge owner
 
 Any non-trivial delegated task must have a contract aligned with `reports/recipes/02-delegation-contracts.md`.
 
@@ -113,6 +117,8 @@ Review must confirm:
 - outputs landed in the correct destination
 - audit trail was updated
 - acceptance checks passed or were explicitly blocked
+- memory ownership and promotion rules were respected
+- tool failures were reported explicitly rather than hidden
 
 For code review, present findings first. If there are no findings, say so and mention residual risks or missing validation.
 
@@ -134,6 +140,7 @@ Use Codex-class capability for:
 - refactors where correctness matters
 
 Do not use expensive models for clerical memory updates if a cheaper tier will do.
+If a required tool is unavailable or fails, report the exact blocker and either use an allowed fallback or delegate. Do not silently no-op.
 
 ## Budget Policy
 

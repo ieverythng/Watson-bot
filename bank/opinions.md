@@ -11,14 +11,9 @@ Preferences and beliefs, each with confidence and evidence.
 
 ## Entries
 
-- `opinion`: Stage-first git workflow should be default for this project.
-  - `confidence`: 0.97
-  - `updated`: 2026-02-25
-  - `evidence`:
-    - active thread instruction
-
 - `opinion`: OM architecture should use hybrid lanes and reflective compression.
   - `confidence`: 0.90
-  - `updated`: 2026-02-25
+  - `updated`: 2026-03-12
   - `evidence`:
     - `reports/research/memory-architecture-review-2026-02-24.md`
+    - `reports/recipes/01-om-loop.md`

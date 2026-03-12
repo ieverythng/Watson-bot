@@ -22,12 +22,17 @@ This file is not append-only. Keep it short, stable, and evidence-backed.
   - Status: active
   - Evidence: direct user instruction on 2026-03-11
 
+- `D-2026-03-12-01`: Durable memory writes belong to WatsonOW-Memory.
+  - Decision: `WatsonOW-Main` and `WatsonOW-Dev` may propose promotions or append daily audit traces, but `OBSERVATIONS.md`, `REFLECTIONS.md`, `MEMORY.md`, and `bank/*` are owned by `WatsonOW-Memory` unless Juan explicitly assigns otherwise.
+  - Status: active
+  - Evidence: 2026-03-12 OM loop hardening pass
+
 ## Current Priorities
 
 - Build Watson-Openclaw Observational Memory (OM) pipeline with:
   - hybrid memory lanes
-  - auditable retrieval policy
-  - scalable truncation/compression policy
+  - deterministic retrieval policy
+  - role-owned promotions and pruning
 
 ## Operating Constraints
 
