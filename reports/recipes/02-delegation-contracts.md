@@ -347,6 +347,9 @@ If multiple Dev delegates are used:
 - Deliverables: edited policy files and concise change summary
 - Acceptance checks: only listed files changed; policy covers output locations, audit trail, model routing, spawn policy
 - Budget expectation: one Codex task, no more than one follow-up revision
+- Token cap: 2000 tokens, hard-stop after one follow-up revision
+- Cost-aware routing note: local review is acceptable for compliance checks, but Codex is justified for policy surgery across multiple interdependent files
+- Exception handling: none; if the cap is at risk, stop and ask
 - Rollback plan: git restore AGENTS.md TOOLS.md HEARTBEAT.md
 - Escalation triggers: if more files need edits or current policy files are inconsistent
 - Audit destination: OBSERVATIONS.md and memory/YYYY-MM-DD.md
