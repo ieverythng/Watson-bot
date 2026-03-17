@@ -11,6 +11,8 @@ STATE_FILE="${STATE_FILE:-$MEM_DIR/observer-state.env}"
 
 TURN_THRESHOLD="${OM_OBSERVER_TURN_THRESHOLD:-10}"
 TOKEN_THRESHOLD="${OM_OBSERVER_TOKEN_THRESHOLD:-5000}"
+POST_CAPTURE_HOOK="${OM_POST_CAPTURE_HOOK:-}"
+POST_CAPTURE_HOOK_STRICT="${OM_POST_CAPTURE_HOOK_STRICT:-0}"
 
 usage() {
   cat <<'EOF'
@@ -28,6 +30,9 @@ Usage:
 Environment:
   OM_OBSERVER_TURN_THRESHOLD   Default: 10
   OM_OBSERVER_TOKEN_THRESHOLD  Default: 5000
+  OM_POST_CAPTURE_HOOK         Optional shell command run after capture.
+                               Receives OM_CAPTURE_* env vars.
+  OM_POST_CAPTURE_HOOK_STRICT  Default: 0. If 1, capture exits non-zero when hook fails.
   OBS_FILE                     Default: OBSERVATIONS.md in repo root
   MEM_DIR                      Default: memory/ in repo root
   TEMPLATE_FILE                Default: memory/templates/daily-memory-template.md
@@ -305,6 +310,62 @@ write_observation() {
   echo "observation_written=true"
 }
 
+run_post_capture_hook() {
+  local scope="$1"
+  local event="$2"
+  local context="$3"
+  local source="$4"
+  local observation="$5"
+  local timestamp="$6"
+  local date="$7"
+  local hook_query
+  local rc
+
+  if [[ -z "$POST_CAPTURE_HOOK" ]]; then
+    return 0
+  fi
+
+  hook_query="$(normalize_line "$observation")"
+  if [[ -z "$hook_query" || "$hook_query" == "none" ]]; then
+    hook_query="$event"
+    if [[ -n "$context" && "$context" != "none" ]]; then
+      hook_query="$event $context"
+    fi
+  fi
+
+  export OM_CAPTURE_SCOPE="$scope"
+  export OM_CAPTURE_EVENT="$event"
+  export OM_CAPTURE_CONTEXT="$context"
+  export OM_CAPTURE_SOURCE="$source"
+  export OM_CAPTURE_OBSERVATION="$(normalize_line "$observation")"
+  export OM_CAPTURE_TIMESTAMP="$timestamp"
+  export OM_CAPTURE_DATE="$date"
+  export OM_CAPTURE_QUERY="$hook_query"
+
+  if bash -lc "$POST_CAPTURE_HOOK"; then
+    echo "post_capture_hook=true"
+    echo "post_capture_hook_status=ok"
+    return 0
+  fi
+
+  rc=$?
+  echo "post_capture_hook=true"
+  echo "post_capture_hook_status=failed"
+  cat >&2 <<EOF
+BLOCKED
+- Tool: OM_POST_CAPTURE_HOOK
+- Failure: exit code $rc
+- Impact: optional post-capture hook did not complete after observer capture.
+- Next action: fix OM_POST_CAPTURE_HOOK or unset it to keep capture-only flow.
+EOF
+
+  if [[ "$POST_CAPTURE_HOOK_STRICT" == "1" ]]; then
+    exit "$rc"
+  fi
+
+  return 0
+}
+
 tick_command() {
   local turns=0
   local tokens=0
@@ -552,6 +613,8 @@ capture_command() {
     save_state
     echo "observer_trigger=false"
   fi
+
+  run_post_capture_hook "$scope" "$normalized_event" "$normalized_context" "$(normalize_line "$source")" "$observation" "$timestamp" "$date"
 }
 
 main() {

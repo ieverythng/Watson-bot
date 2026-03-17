@@ -110,3 +110,23 @@ This file is periodic and curated, not turn-by-turn.
     - `AGENTS.md`
     - `TOOLS.md`
     - active user instructions on 2026-03-12
+
+- `id`: R-2026-03-17-01
+  - `window`: 2026-03-11 to 2026-03-17
+  - `themes`:
+    - Recent repo pulls and project-specific operations are landing in daily audit memory instead of bloating durable lanes.
+    - `MEMORY.md` remains compact and reserved for stable operating truths.
+    - The main remaining hygiene issue is a transcript-sized status artifact under `memory/`, which should live in reports with only a pointer kept in daily memory.
+  - `durable_updates`:
+    - Promote the transcript/test-dump routing rule into `MEMORY.md`.
+  - `conflicts`:
+    - None identified; the gap is hygiene and enforcement, not policy ambiguity.
+  - `actions`:
+    - Relocate or rewrite `memory/2026-03-11-repo-memory-status.md` into `reports/openclaw/` and leave a short pointer in daily memory if the artifact is still needed.
+    - Keep observing whether repo-sync operations remain confined to `memory/YYYY-MM-DD.md` unless they change workflow or policy.
+  - `evidence`:
+    - `memory/2026-03-11.md`
+    - `memory/2026-03-17.md`
+    - `MEMORY.md`
+    - `OBSERVATIONS.md`
+    - `reports/recipes/01-om-loop.md`

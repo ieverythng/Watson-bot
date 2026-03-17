@@ -27,6 +27,11 @@ This file is not append-only. Keep it short, stable, and evidence-backed.
   - Status: active
   - Evidence: 2026-03-12 OM loop hardening pass
 
+- `D-2026-03-17-01`: Keep transcript-sized artifacts out of active memory lanes.
+  - Decision: Store long transcripts, status dumps, and test artifacts in `reports/openclaw/` or other report lanes; keep only short audit pointers in `memory/YYYY-MM-DD.md`.
+  - Status: active
+  - Evidence: `reports/recipes/01-om-loop.md`, `REFLECTIONS.md` (`R-2026-03-12-01`), `memory/2026-03-11-repo-memory-status.md`
+
 ## Current Priorities
 
 - Build Watson-Openclaw Observational Memory (OM) pipeline with:

@@ -1,0 +1,22 @@
+{
+  "name": "WatsonOM-ImmediateMemorySweep",
+  "description": "One-shot bootstrap sweep to run on the next heartbeat after registration/startup.",
+  "agentId": "memory",
+  "enabled": true,
+  "lightContext": true,
+  "wakeMode": "next-heartbeat",
+  "sessionTarget": "isolated",
+  "deleteAfterRun": true,
+  "schedule": {
+    "kind": "at",
+    "at": "+2m"
+  },
+  "payload": {
+    "kind": "agentTurn",
+    "message": "BOOTSTRAP OM SWEEP. On the next heartbeat, run `python3 scripts/token_tracker.py report --date $(date -u +%F) --write` and `python3 scripts/token_tracker.py status --date $(date -u +%F)` to create the initial Codex-only expenditure snapshot for the day. Then check `memory/YYYY-MM-DD.md` plus the rest of `memory/` for stale transcript dumps, flag any orphaned file over 200 lines for relocation to `reports/openclaw/`, verify `MEMORY.md` is still compact, and leave a short audit note describing what needs cleanup or confirming no action was needed." 
+  },
+  "delivery": {
+    "mode": "none",
+    "bestEffort": true
+  }
+}

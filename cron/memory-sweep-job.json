@@ -1,0 +1,21 @@
+{
+  "name": "WatsonOM-MemorySweep",
+  "description": "Hourly isolated Watson Memory sweep with Codex-only usage tracking and stale transcript checks.",
+  "agentId": "memory",
+  "enabled": true,
+  "lightContext": true,
+  "wakeMode": "now",
+  "sessionTarget": "isolated",
+  "schedule": {
+    "kind": "interval",
+    "every": "60m"
+  },
+  "payload": {
+    "kind": "agentTurn",
+    "message": "HOURLY OM SWEEP. Run `python3 scripts/token_tracker.py report --date $(date -u +%F) --write` to refresh the Codex-only ledger summary and hourly cache, then run `python3 scripts/token_tracker.py status --date $(date -u +%F)` for the active-subagent/token snapshot. After that, inspect `memory/` for stale transcript artifacts, flag any memory file over 200 lines for relocation to `reports/openclaw/`, keep `MEMORY.md` under ~60 lines (compact only if it drifts over), and append one concise audit note plus at most one evidence-backed observation when the sweep finds a reusable hygiene signal." 
+  },
+  "delivery": {
+    "mode": "none",
+    "bestEffort": true
+  }
+}

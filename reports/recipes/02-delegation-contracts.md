@@ -73,6 +73,9 @@ Every delegated task must contain:
 - Deliverables:
 - Acceptance checks:
 - Budget expectation:
+- Token cap:
+- Cost-aware routing note:
+- Exception handling:
 - Rollback plan:
 - Escalation triggers:
 - Audit destination:
@@ -117,6 +120,7 @@ Choose explicitly:
 Rule:
 - default cheap/local first
 - Codex for repo surgery, debugging, non-trivial code edits, or difficult technical review
+- planning, bookkeeping, lightweight review, and status gathering should stay on local tiers unless the contract explains why Codex is still cheaper overall
 
 ### Scope
 State exactly what part of the repo or system is in scope.
@@ -195,6 +199,33 @@ Record:
 - expected model
 - expected turns
 - whether Codex is justified
+- expected audit output if Codex is used
+
+### Token cap
+Mandatory for all Codex delegations.
+Record:
+- token ceiling for the task
+- maximum follow-up revision count
+- whether the cap is hard-stop or warning-only
+
+Defaults:
+- `2000` tokens for a normal Codex delegation
+- up to `5000` tokens only when the contract marks the task as high-priority and explains why a cheaper route is inadequate
+
+### Cost-aware routing note
+Mandatory for all Codex delegations.
+State:
+- why a local tier was rejected for this task
+- what part of the task must stay on Codex
+- what parts, if any, must be moved back to local-cheap or local-reasoning after implementation
+
+### Exception handling
+Required whenever the contract allows a Codex task to exceed default caps or bypass normal routing.
+Must include:
+- the exact trigger for the exception (for example: production breakage, user-facing blocker, deadline-critical patch)
+- the temporary revised cap
+- who must be informed in the audit trail
+- the stop condition if the exception still fails acceptance
 
 ### Rollback plan
 Always specify:
@@ -210,6 +241,9 @@ Delegate must stop and ask Juan if:
 - more than N files change unexpectedly
 - tests fail in a way not directly tied to the task
 - a required tool is unavailable and no approved fallback exists
+- a Codex delegation hits 80% of its token cap before acceptance is in sight
+- cumulative Codex spend suggests the weekly budget will exceed the contract's routing assumptions
+- a high-priority exception would require another cap increase beyond the already approved override
 
 ### Audit destination
 At minimum:

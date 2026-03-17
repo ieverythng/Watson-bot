@@ -110,3 +110,27 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: OM control logic now defines deterministic retrieval order, role-owned durable memory writes, explicit promotion/pruning rules, and required reporting of tool failures instead of silent no-ops.
   - `evidence`: `reports/recipes/01-om-loop.md`, `reports/recipes/02-delegation-contracts.md`, `AGENTS.md`, `TOOLS.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `MEMORY.md`
   - `expires`: none
+
+- `id`: O-2026-03-12-04
+  - `timestamp`: 2026-03-12T02:11:00Z
+  - `scope`: infra
+  - `confidence`: 0.94
+  - `observation`: OpenClaw config lacks explicit memory search paths for OM retrieval; patching now.
+  - `evidence`: subagent runtime-alignment task (2026-03-12), `memory/2026-03-12.md`
+  - `expires`: 2026-03-19
+
+- `id`: O-2026-03-17-01
+  - `timestamp`: 2026-03-17T01:24:00Z
+  - `scope`: process
+  - `confidence`: 0.95
+  - `observation`: OM lane audit shows recent repo operations such as the `nao-ros4hri-bridge` fast-forward are staying in daily memory, while transcript-sized artifacts can still leak into `memory/`; transcript routing is the main current hygiene gap.
+  - `evidence`: `memory/2026-03-17.md`, `memory/2026-03-11.md`, `memory/2026-03-11-repo-memory-status.md`, `MEMORY.md`, `reports/recipes/01-om-loop.md`
+  - `expires`: 2026-03-24
+
+- `id`: O-2026-03-17-02
+  - `timestamp`: 2026-03-17T02:48:00Z
+  - `scope`: infra
+  - `confidence`: 0.97
+  - `observation`: OM automation now uses isolated `memory`-agent cron jobs plus local OpenClaw session/transcript parsing to track Codex spend and stale memory artifacts without repeated external API polling.
+  - `evidence`: `cron/memory-sweep-job.json`, `cron/immediate-memory-sweep.json`, `scripts/token_tracker.py`, `scripts/token-tracker.sh`, `reports/expenditure/ledger-2026-03-17.md`, `openclaw cron list --all --json`
+  - `expires`: 2026-03-24
