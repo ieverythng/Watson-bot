@@ -134,3 +134,11 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: OM automation now uses isolated `memory`-agent cron jobs plus local OpenClaw session/transcript parsing to track Codex spend and stale memory artifacts without repeated external API polling.
   - `evidence`: `cron/memory-sweep-job.json`, `cron/immediate-memory-sweep.json`, `scripts/token_tracker.py`, `scripts/token-tracker.sh`, `reports/expenditure/ledger-2026-03-17.md`, `openclaw cron list --all --json`
   - `expires`: 2026-03-24
+
+- `id`: O-2026-03-17-03
+  - `timestamp`: 2026-03-17T03:01:00Z
+  - `scope`: process
+  - `confidence`: 0.96
+  - `observation`: Relocated oversized transcript to compliance by moving the 2026-03-11 status dump out of `memory/` and into `reports/openclaw/transcripts/`.
+  - `evidence`: `reports/openclaw/transcripts/2026-03-11-repo-memory-status.md`, `memory/2026-03-17.md`
+  - `expires`: 2026-03-24
