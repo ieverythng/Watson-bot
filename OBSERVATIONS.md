@@ -142,3 +142,43 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: Relocated oversized transcript to compliance by moving the 2026-03-11 status dump out of `memory/` and into `reports/openclaw/transcripts/`.
   - `evidence`: `reports/openclaw/transcripts/2026-03-11-repo-memory-status.md`, `memory/2026-03-17.md`
   - `expires`: 2026-03-24
+
+- `id`: O-2026-03-17-04
+  - `timestamp`: 2026-03-17T03:43:00Z
+  - `scope`: process
+  - `confidence`: 0.93
+  - `observation`: Current OM sweep stale-memory alerts are now mainly being triggered by non-canonical filenames, so the flag should be interpreted as a naming-hygiene check unless a file also shows transcript-like content or excessive line count.
+  - `evidence`: `reports/expenditure/ledger-2026-03-17.md`, `memory/2026-02-23-2227.md`, `memory/2026-03-12-delegation-test.md`
+  - `expires`: 2026-03-24
+
+- `id`: O-2026-03-28-01
+  - `timestamp`: 2026-03-28T19:43:00Z
+  - `scope`: process
+  - `confidence`: 0.95
+  - `observation`: Current OM sweep stale-memory alerts still mostly indicate filename-hygiene drift; treat them as relocation candidates only when a flagged file is also transcript-shaped or exceeds the memory-size threshold.
+  - `evidence`: `reports/expenditure/ledger-2026-03-28.md`, `memory/2026-02-23-2227.md`, `memory/2026-03-12-delegation-test.md`, `memory/2026-03-28.md`
+  - `expires`: 2026-04-04
+
+- `id`: O-2026-04-01-01
+  - `timestamp`: 2026-04-01T01:12:40Z
+  - `scope`: process
+  - `confidence`: 0.92
+  - `observation`: Current Watson-repo OM hygiene is in a clean-state regime: remaining sweep drift is minor template-format residue rather than durable-memory growth or transcript bloat.
+  - `evidence`: MEMORY.md; memory/2026-04-01.md; reports/expenditure/ledger-2026-04-01.md
+  - `expires`: 2026-04-08
+
+- `id`: O-2026-05-21-01
+  - `timestamp`: 2026-05-21T03:55:31Z
+  - `scope`: process
+  - `confidence`: 0.97
+  - `observation`: OM sweep cycle is executing but OBSERVATIONS.md and REFLECTIONS.md have not been updated since early April and mid-March respectively; the OM writing loop has gone dormant despite active repo work including Hermes migration, Codex harness integration, and expenditure tracking infrastructure.
+  - `evidence`: OBSERVATIONS.md (last: O-2026-04-01-01), REFLECTIONS.md (last: R-2026-03-17-01), memory/2026-05-07.md, reports/expenditure/ledger-2026-05-21.md
+  - `expires`: none
+
+- `id`: O-2026-05-30-01
+  - `timestamp`: 2026-05-30T15:46:49Z
+  - `scope`: process
+  - `confidence`: 0.96
+  - `observation`: OM writing loop dormancy confirmed persistent: 9+ days since last OBSERVATIONS.md update and 7+ weeks since last REFLECTIONS.md entry, despite sustained daily activity (21 sessions on 2026-05-30 alone). The OM sweep cron jobs execute but do not produce new observations or reflections — the loop captures events to daily memory but does not flush to durable lanes.
+  - `evidence`: memory/2026-05-30.md, OBSERVATIONS.md (last: O-2026-05-21-01), REFLECTIONS.md (last: R-2026-03-17-01), reports/expenditure/ledger-2026-05-30.md
+  - `expires`: none
