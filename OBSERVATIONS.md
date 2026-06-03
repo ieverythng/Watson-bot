@@ -182,3 +182,27 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: OM writing loop dormancy confirmed persistent: 9+ days since last OBSERVATIONS.md update and 7+ weeks since last REFLECTIONS.md entry, despite sustained daily activity (21 sessions on 2026-05-30 alone). The OM sweep cron jobs execute but do not produce new observations or reflections — the loop captures events to daily memory but does not flush to durable lanes.
   - `evidence`: memory/2026-05-30.md, OBSERVATIONS.md (last: O-2026-05-21-01), REFLECTIONS.md (last: R-2026-03-17-01), reports/expenditure/ledger-2026-05-30.md
   - `expires`: none
+
+- `id`: O-2026-06-03-01
+  - `timestamp`: 2026-06-03T14:22:16Z
+  - `scope`: infra
+  - `confidence`: 0.80
+  - `observation`: Vision bridge deployed: image support for Codex CLI via gpt-5.4-mini, enabling vision-capable delegated workflows.
+  - `evidence`: commit 79c64d8, scripts/vision-bridge/vision_bridge.py, active process running
+  - `expires`: none
+
+- `id`: O-2026-06-03-02
+  - `timestamp`: 2026-06-03T14:22:21Z
+  - `scope`: infra
+  - `confidence`: 0.80
+  - `observation`: ZeroTier bootstrap docs updated with real network IPs (10.88.140.94/135), network ID 3b19b3a716937e29, and session management section covering stateless request model, KV cache behavior, and context isolation.
+  - `evidence`: commit 35f326d, reports/recipes/ zerotier bootstrap docs
+  - `expires`: none
+
+- `id`: O-2026-06-03-03
+  - `timestamp`: 2026-06-03T14:22:26Z
+  - `scope`: process
+  - `confidence`: 0.80
+  - `observation`: OM writing loop dormancy persists: 4 days since last OBSERVATIONS.md update, 7+ weeks since last REFLECTIONS.md entry. Sweep cron jobs execute but do not produce new durable observations — the loop captures events to daily memory without flushing to durable lanes.
+  - `evidence`: OBSERVATIONS.md (last pre-today: O-2026-05-30-01), REFLECTIONS.md (last: R-2026-03-17-01), memory/2026-05-30.md
+  - `expires`: none
