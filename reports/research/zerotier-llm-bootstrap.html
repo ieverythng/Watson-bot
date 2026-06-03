@@ -381,6 +381,116 @@ codex exec --model qwen36-turbo-hermes "Say hello"</code></pre>
 
 </div>
 
+<h2>👁️ Vision Bridge — Image Support for Codex CLI</h2>
+
+<div class="info">
+<strong>Problem:</strong> llama.cpp does not support image input. When Codex CLI sends an image, it gets <code>"image input is not supported"</code> and disconnects/reconnects.
+<strong>Solution:</strong> The Vision Bridge intercepts requests on Linux, describes images via gpt-5.4-mini (Codex OAuth), then forwards cleaned text to LiteLLM → llama.cpp.
+</div>
+
+<div class="arch">
+┌──────────────────────┐     ┌──────────────────────┐     ┌──────────────────────┐
+│   Codex CLI           │────▶│  Vision Bridge :8002  │────▶│  LiteLLM :4000       │
+│   (Linux Laptop)      │     │  (Linux Laptop)       │     │  (Windows PC)         │
+│                       │     │                       │     │                      │
+│   Sends images        │     │  Describes images     │     │  Translates API       │
+│   via /v1/responses   │     │  via gpt-5.4-mini     │     │  Responses → Chat     │
+└──────────────────────┘     └──────────────────────┘     └──────────┬───────────┘
+                                                                      │ localhost:8080
+                                                              ┌────────▼───────────┐
+                                                              │  llama.cpp :8080   │
+                                                              │  (Windows PC)      │
+                                                              │  qwen36-turbo-hermes│
+                                                              └────────────────────┘
+</div>
+
+<div class="machine">
+<h3>🐧 Vision Bridge Setup (Linux Laptop)</h3>
+
+<div class="step">
+<h3>Step 1: Start the Vision Bridge</h3>
+<pre><code># Activate Hermes venv and start the bridge
+cd /home/juanbeck/.hermes/hermes-agent \
+  &amp;&amp; source venv/bin/activate \
+  &amp;&amp; HERMES_HOME=/home/juanbeck/.hermes \
+     python3 /home/juanbeck/Watson/scripts/vision-bridge/vision_bridge.py</code></pre>
+<p>The bridge listens on <code>0.0.0.0:8002</code>. It requires:</p>
+<ul>
+  <li>Hermes venv at <code>~/.hermes/hermes-agent/venv</code></li>
+  <li>Codex OAuth token (loaded from Hermes config)</li>
+  <li>Upstream LiteLLM reachable at <code>10.88.140.94:4000</code></li>
+</ul>
+</div>
+
+<div class="step">
+<h3>Step 2: Verify Health</h3>
+<pre><code># Check bridge is running
+curl -s http://localhost:8002/health | python3 -m json.tool
+
+# Expected output:
+# {
+#   "status": "ok",
+#   "upstream": "http://10.88.140.94:4000/v1",
+#   "local_model": "qwen36-turbo-hermes",
+#   "vision_model": "gpt-5.4-mini"
+# }</code></pre>
+</div>
+
+<div class="step">
+<h3>Step 3: Point Codex CLI at the Vision Bridge</h3>
+<p><strong>Critical:</strong> Update <code>~/.codex/config.toml</code> to point at port <code>8002</code>, NOT directly at LiteLLM or llama.cpp:</p>
+<pre><code># ~/.codex/config.toml
+# Point Codex at the Vision Bridge on port 8002.
+# The bridge intercepts /v1/responses, describes images via gpt-5.4-mini,
+# then forwards cleaned text requests to LiteLLM → llama.cpp.
+openai_base_url = "http://127.0.0.1:8002/v1"
+
+# Default model
+model = "qwen36-turbo-hermes"</code></pre>
+<div class="err">
+<strong>⚠️ If Codex points directly to llama.cpp (<code>172.24.16.1:8080</code>) or LiteLLM (<code>10.88.140.94:4000</code>), images will fail with "image input not supported" and Codex will disconnect/reconnect.</strong>
+</div>
+</div>
+
+<div class="step">
+<h3>Step 4: Test with an Image</h3>
+<pre><code># In Codex CLI, send a message with an attached image
+# The bridge should describe it via gpt-5.4-mini and forward to llama.cpp
+# You should see the model respond normally instead of disconnecting</code></pre>
+</div>
+
+<div class="step">
+<h3>Step 5: Keep It Running</h3>
+<p>The vision bridge is a long-running server. Options:</p>
+<ul>
+  <li><strong>Background process</strong> — run in tmux/screen or via Hermes background terminal</li>
+  <li><strong>Systemd service</strong> — create a unit file for auto-start</li>
+  <li><strong>Hermes cronjob</strong> — schedule periodic restarts if it crashes</li>
+</ul>
+<pre><code># Quick tmux approach:
+tmux new -s vision-bridge 'cd /home/juanbeck/.hermes/hermes-agent &amp;&amp; source venv/bin/activate &amp;&amp; HERMES_HOME=/home/juanbeck/.hermes python3 /home/juanbeck/Watson/scripts/vision-bridge/vision_bridge.py'</code></pre>
+</div>
+
+<div class="step">
+<h3>Troubleshooting</h3>
+<div class="warn">
+<strong>Port 8002 already in use:</strong> Kill the old process first:
+<pre><code>lsof -i :8002 | grep LISTEN | awk '{print $2}' | xargs -r kill -9</code></pre>
+</div>
+<div class="warn">
+<strong>No Codex OAuth token:</strong> The bridge needs a valid Codex OAuth token to call gpt-5.4-mini. Ensure Hermes auth is configured: <code>hermes auth codex</code>
+</div>
+<div class="warn">
+<strong>Upstream unreachable:</strong> If LiteLLM at <code>10.88.140.94:4000</code> is down, the bridge will fail to forward requests. Verify with:
+<pre><code>curl http://10.88.140.94:4000/v1/models</code></pre>
+</div>
+<div class="warn">
+<strong>Bridge crashes (SIGKILL/137):</strong> The bridge has been known to crash. Monitor and restart. Consider a watchdog script or systemd service for reliability.
+</div>
+</div>
+
+</div>
+
 <h2>📄 Config Files (Copy-Paste Ready)</h2>
 
 <div class="card">
