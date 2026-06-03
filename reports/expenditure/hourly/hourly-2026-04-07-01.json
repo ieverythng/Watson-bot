@@ -1,0 +1,15 @@
+{
+  "fetchedAt": "2026-04-07T01:54:05Z",
+  "start": "2026-04-06T01:00:00Z",
+  "end": "2026-04-07T01:00:00Z",
+  "usage": {
+    "ok": false,
+    "error": "HTTP Error 401: Unauthorized",
+    "fetchedAt": "2026-04-07T01:54:06Z"
+  },
+  "costs": {
+    "ok": false,
+    "error": "HTTP Error 401: Unauthorized",
+    "fetchedAt": "2026-04-07T01:54:06Z"
+  }
+}

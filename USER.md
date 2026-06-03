@@ -20,7 +20,7 @@ _Learn about the person you're helping. Update this as you go._
 
 Use this only when host-specific decisions matter. Verify on the current machine before making operational assumptions.
 
-- CPU: AMD Ryzen 5 5500
+- CPU: AMD Ryzen 7 5800X (upgraded from Ryzen 5 5500; user debating whether to keep or return)
 - RAM: 16 GB DDR4 
 - GPU: NVIDIA RTX 5070 Ti (16 GB VRAM)
 - Storage: SSD + HDD combo

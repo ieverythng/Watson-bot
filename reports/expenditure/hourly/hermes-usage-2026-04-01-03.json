@@ -1,0 +1,53 @@
+{
+  "date": "2026-04-01",
+  "generated_at": "2026-04-01T01:14:18Z",
+  "hourly": {
+    "2026-04-01 01:00 CEST": {
+      "sessions": 1,
+      "input": 3486737,
+      "output": 17891,
+      "cached": 340736,
+      "cost": 0.0
+    },
+    "2026-04-01 02:00 CEST": {
+      "sessions": 3,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "cost": 0.0
+    },
+    "2026-04-01 03:00 CEST": {
+      "sessions": 2,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "cost": 0.0
+    }
+  },
+  "bucket_totals": {
+    "codex": {
+      "sessions": 1,
+      "input": 3486737,
+      "output": 17891,
+      "cached": 340736,
+      "reasoning": 5625,
+      "cost": 0.0
+    },
+    "local": {
+      "sessions": 0,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "reasoning": 0,
+      "cost": 0.0
+    },
+    "other": {
+      "sessions": 5,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "reasoning": 0,
+      "cost": 0.0
+    }
+  }
+}

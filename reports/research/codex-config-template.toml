@@ -1,0 +1,7 @@
+# Codex CLI Configuration Template
+# Copy this to ~/.codex/config.toml on each client machine
+# Replace <WINDOWS_ZEROTIER_IP> with your Windows PC's ZeroTier IP
+
+[openai]
+base_url = "http://<WINDOWS_ZEROTIER_IP>:4000/v1"
+api_key = "placeholder"

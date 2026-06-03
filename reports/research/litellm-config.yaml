@@ -1,0 +1,14 @@
+# LiteLLM Proxy Configuration for WatsonOW ZeroTier Setup
+# Place this file on your Windows PC where llama.cpp runs
+# Then run: litellm --config litellm-config.yaml --port 4000
+
+model_list:
+  - model_name: qwen36-turbo-hermes
+    litellm_params:
+      model: openai/qwen36-turbo-hermes
+      api_base: http://127.0.0.1:8080/v1
+      api_key: placeholder
+
+# Environment variables for the proxy process
+env_vars:
+  OPENAI_API_KEY: placeholder
