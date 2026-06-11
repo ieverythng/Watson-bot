@@ -567,7 +567,19 @@ Or, in one sentence:
 
 - path root: `~/.hermes/profiles/`
 - profiles present: `watson-dev`, `watson-plus`, `watson-codex`
-- issue: profile configs are malformed due to embedded line-number prefixes
+- status: all configs cleaned (RESOLVED 2026-06-11), valid YAML, no line-number prefixes
+
+### Per-session model switching (/model)
+
+Hermes Gateway supports the `/model` slash command in Discord sessions, allowing per-channel model selection without changing global config:
+
+```
+/model gpt-5.5 --provider chatgpt-plus          # session-only switch
+/model gpt-5.5 --provider chatgpt-plus --global # persist to config.yaml
+/model                                           # interactive picker
+```
+
+Each Discord channel maintains its own session, so different channels can independently use different models. Available providers include: `watson-llama`, `ollama-cloud`, `copilot`, `chatgpt-plus`, and `openai-codex`.
 
 ### CLIProxyAPI
 

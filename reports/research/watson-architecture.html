@@ -195,8 +195,7 @@
   <h3>&#x1f4c2; Consolidation Target</h3>
   <p><strong>Decision:</strong> Use existing <code>ieverythng/Watson-bot</code> repo as the canonical monorepo. The local WatsonOW workspace at <code>/home/juanbeck/Watson</code> is already the working tree for this repo.</p>
 
-<div class="flow">
-Watson-bot/ (monorepo root)
+<div class="flow">Watson-bot/ (monorepo root)
 ├── README.md, AGENTS.md, IDENTITY.md, ...  ← Watson control plane
 ├── docs/
 ├── reports/
@@ -214,11 +213,34 @@ Watson-bot/ (monorepo root)
 │   ├── zerotier-llm-proxy/
 │   ├── iChess-Sim/
 │   └── iTrack-Supply-Chain/
-└── tools/
-</div>
+└── tools/</div>
 
   <p><strong>Import method:</strong> <code>git subtree</code> or <code>git filter-repo</code>-based history import (not manual file copying).</p>
   <p><strong>Import order:</strong> zerotier-llm-proxy → CLIProxyAPI → iChess-Sim → iTrack-Supply-Chain</p>
+</div>
+
+<h2>Per-Session Model Switching (/model)</h2>
+
+<div class="card">
+  <h3>&#x1f504; Dynamic Model Selection in Discord</h3>
+  <p>Hermes Gateway supports the <code>/model</code> slash command — switch models per channel without changing global config:</p>
+  <pre><code># Switch this session to gpt-5.5 via chatgpt-plus
+/model gpt-5.5 --provider chatgpt-plus
+
+# Switch and persist globally (writes to config.yaml)
+/model gpt-5.5 --provider chatgpt-plus --global
+
+# Interactive picker (all providers + models)
+/model</code></pre>
+  <table>
+    <tr><th>Provider</th><th>Slug</th><th>Models</th></tr>
+    <tr><td>watson-llama</td><td><code>watson-llama</code></td><td>qwen36-turbo-hermes</td></tr>
+    <tr><td>Ollama Cloud</td><td><code>ollama-cloud</code></td><td>qwen3-vl:235b, kimi-k2:1t, gemma4:31b, ...</td></tr>
+    <tr><td>GitHub Copilot</td><td><code>copilot</code></td><td>claude-opus-4.8, gpt-5.5, gpt-5.4, ...</td></tr>
+    <tr><td>chatgpt-plus</td><td><code>chatgpt-plus</code></td><td>gpt-5.5, gpt-5.4, gpt-5.4-mini, codex-auto-review, ...</td></tr>
+    <tr><td>OpenAI Codex</td><td><code>openai-codex</code></td><td>gpt-5.5, gpt-5.4, gpt-5.4-mini</td></tr>
+  </table>
+  <p><em>Each Discord channel has its own session — different channels can independently use different models.</em></p>
 </div>
 
 <h2>Known Issues</h2>

@@ -207,7 +207,7 @@ codex:
   <p>CLIProxyAPI exposes a standard OpenAI-compatible API for ChatGPT/Codex models. The local Watson inference backend is separately served by llama.cpp on the Windows host at <code>http://172.24.16.1:8080/v1</code>.</p>
 </div>
 
-<h2>Existing OAuth Access (Hermes Built-in)</h2>
+<h2>Existing OAuth Access (Hermes Built-In)</h2>
 
 <div class="card">
   <h3>&#x1f3af; Note: Hermes Already Has Codex OAuth</h3>
@@ -218,6 +218,31 @@ codex:
   </ul>
   <p>CLIProxyAPI adds value by exposing <strong>additional models</strong> (GPT-5.5, codex-auto-review, gpt-image-2) that may not be available through Hermes' built-in Codex OAuth, and by providing a <strong>standalone proxy endpoint</strong> that any OpenAI-compatible client can use independently.</p>
   <p><strong>Key difference:</strong> Hermes' built-in Codex OAuth uses the Codex CLI authentication flow. CLIProxyAPI uses its own OAuth implementation with multi-account pooling, model routing, and a full API surface.</p>
+</div>
+
+<h2>Per-Session Model Switching via /model</h2>
+
+<div class="card">
+  <h3>&#x1f504; Dynamic Model Selection in Discord</h3>
+  <p>Hermes Gateway supports the <code>/model</code> slash command in Discord sessions. This lets you switch the model for a specific channel/session without changing global config:</p>
+  <pre><code># Switch this session to gpt-5.5 via chatgpt-plus
+/model gpt-5.5 --provider chatgpt-plus
+
+# Switch and persist globally (writes to config.yaml)
+/model gpt-5.5 --provider chatgpt-plus --global
+
+# Interactive picker (shows all available providers + models)
+/model</code></pre>
+  <p><strong>Available providers discovered by Hermes:</strong></p>
+  <table>
+    <tr><th>Provider</th><th>Slug</th><th>Models</th></tr>
+    <tr><td>watson-llama</td><td><code>watson-llama</code></td><td>qwen36-turbo-hermes</td></tr>
+    <tr><td>Ollama Cloud</td><td><code>ollama-cloud</code></td><td>qwen3-vl:235b, kimi-k2:1t, gemma4:31b, ...</td></tr>
+    <tr><td>GitHub Copilot</td><td><code>copilot</code></td><td>claude-opus-4.8, gpt-5.5, gpt-5.4, ...</td></tr>
+    <tr><td>chatgpt-plus</td><td><code>chatgpt-plus</code></td><td>gpt-5.5, gpt-5.4, gpt-5.4-mini, codex-auto-review, ...</td></tr>
+    <tr><td>OpenAI Codex</td><td><code>openai-codex</code></td><td>gpt-5.5, gpt-5.4, gpt-5.4-mini</td></tr>
+  </table>
+  <p><strong>Use case:</strong> Create a dedicated Discord channel/thread and run <code>/model gpt-5.5 --provider chatgpt-plus</code> to make that entire session run directly through ChatGPT Plus — no delegation needed. Each Discord channel maintains its own session, so different channels can use different models.</p>
 </div>
 
 <h2>Multi-Account / Multi-Session</h2>
