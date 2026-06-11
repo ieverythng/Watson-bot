@@ -1,0 +1,109 @@
+{
+  "date": "2026-06-04",
+  "generated_at": "2026-06-04T17:27:38Z",
+  "hourly": {
+    "2026-06-04 00:00 CEST": {
+      "sessions": 2,
+      "input": 18343,
+      "output": 1175,
+      "cached": 167895,
+      "cost": 0.0
+    },
+    "2026-06-04 01:00 CEST": {
+      "sessions": 1,
+      "input": 404,
+      "output": 393,
+      "cached": 66756,
+      "cost": 0.0
+    },
+    "2026-06-04 02:00 CEST": {
+      "sessions": 2,
+      "input": 9585,
+      "output": 1305,
+      "cached": 200997,
+      "cost": 0.0
+    },
+    "2026-06-04 03:00 CEST": {
+      "sessions": 1,
+      "input": 404,
+      "output": 411,
+      "cached": 66748,
+      "cost": 0.0
+    },
+    "2026-06-04 13:00 CEST": {
+      "sessions": 1,
+      "input": 80564,
+      "output": 12087,
+      "cached": 2713629,
+      "cost": 0.0
+    },
+    "2026-06-04 14:00 CEST": {
+      "sessions": 7,
+      "input": 261380,
+      "output": 8649,
+      "cached": 4101566,
+      "cost": 0.0
+    },
+    "2026-06-04 15:00 CEST": {
+      "sessions": 2,
+      "input": 29070,
+      "output": 1218,
+      "cached": 230519,
+      "cost": 0.0
+    },
+    "2026-06-04 16:00 CEST": {
+      "sessions": 2,
+      "input": 6058,
+      "output": 813,
+      "cached": 93352,
+      "cost": 0.0
+    },
+    "2026-06-04 17:00 CEST": {
+      "sessions": 7,
+      "input": 599913,
+      "output": 19234,
+      "cached": 7476759,
+      "cost": 0.0
+    },
+    "2026-06-04 18:00 CEST": {
+      "sessions": 11,
+      "input": 311809,
+      "output": 14381,
+      "cached": 5271224,
+      "cost": 0.0
+    },
+    "2026-06-04 19:00 CEST": {
+      "sessions": 4,
+      "input": 243757,
+      "output": 19364,
+      "cached": 3527289,
+      "cost": 0.0
+    }
+  },
+  "bucket_totals": {
+    "codex": {
+      "sessions": 2,
+      "input": 132795,
+      "output": 13367,
+      "cached": 2640896,
+      "reasoning": 2445,
+      "cost": 0.0
+    },
+    "local": {
+      "sessions": 30,
+      "input": 1428492,
+      "output": 65663,
+      "cached": 21275838,
+      "reasoning": 0,
+      "cost": 0.0
+    },
+    "other": {
+      "sessions": 8,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "reasoning": 0,
+      "cost": 0.0
+    }
+  }
+}

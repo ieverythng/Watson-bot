@@ -1,0 +1,109 @@
+{
+  "date": "2026-06-05",
+  "generated_at": "2026-06-05T20:03:11Z",
+  "hourly": {
+    "2026-06-05 00:00 CEST": {
+      "sessions": 10,
+      "input": 372706,
+      "output": 13712,
+      "cached": 6100894,
+      "cost": 0.0
+    },
+    "2026-06-05 01:00 CEST": {
+      "sessions": 2,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "cost": 0.0
+    },
+    "2026-06-05 02:00 CEST": {
+      "sessions": 6,
+      "input": 338007,
+      "output": 9214,
+      "cached": 4276893,
+      "cost": 0.0
+    },
+    "2026-06-05 15:00 CEST": {
+      "sessions": 1,
+      "input": 16632,
+      "output": 89,
+      "cached": 16594,
+      "cost": 0.0
+    },
+    "2026-06-05 16:00 CEST": {
+      "sessions": 2,
+      "input": 1652,
+      "output": 359,
+      "cached": 98847,
+      "cost": 0.0
+    },
+    "2026-06-05 17:00 CEST": {
+      "sessions": 1,
+      "input": 269,
+      "output": 92,
+      "cached": 32957,
+      "cost": 0.0
+    },
+    "2026-06-05 18:00 CEST": {
+      "sessions": 3,
+      "input": 288231,
+      "output": 10384,
+      "cached": 3435867,
+      "cost": 0.0
+    },
+    "2026-06-05 19:00 CEST": {
+      "sessions": 2,
+      "input": 59303,
+      "output": 3915,
+      "cached": 1460940,
+      "cost": 0.0
+    },
+    "2026-06-05 20:00 CEST": {
+      "sessions": 1,
+      "input": 16960,
+      "output": 408,
+      "cached": 50564,
+      "cost": 0.0
+    },
+    "2026-06-05 21:00 CEST": {
+      "sessions": 2,
+      "input": 1038,
+      "output": 497,
+      "cached": 99969,
+      "cost": 0.0
+    },
+    "2026-06-05 22:00 CEST": {
+      "sessions": 1,
+      "input": 122,
+      "output": 202,
+      "cached": 33173,
+      "cost": 0.0
+    }
+  },
+  "bucket_totals": {
+    "codex": {
+      "sessions": 0,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "reasoning": 0,
+      "cost": 0.0
+    },
+    "local": {
+      "sessions": 31,
+      "input": 1094920,
+      "output": 38872,
+      "cached": 15606698,
+      "reasoning": 0,
+      "cost": 0.0
+    },
+    "other": {
+      "sessions": 0,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "reasoning": 0,
+      "cost": 0.0
+    }
+  }
+}

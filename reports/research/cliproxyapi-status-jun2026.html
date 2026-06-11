@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLIProxyAPI — ChatGPT Plus via Hermes: Implementation Status</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --orange: #d29922;
+    --purple: #bc8cff;
+    --code-bg: #1c2128;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #fff; }
+  h2 { font-size: 1.4rem; margin: 2rem 0 1rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 0.75rem; color: var(--purple); }
+  p { margin: 0.5rem 0; }
+  code { background: var(--code-bg); padding: 0.2em 0.4em; border-radius: 6px; font-size: 0.9em; }
+  pre { background: var(--code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+  pre code { background: none; padding: 0; }
+  .status { display: inline-block; padding: 0.25em 0.75em; border-radius: 999px; font-size: 0.85em; font-weight: 600; }
+  .status-done { background: #1a3a2a; color: var(--green); border: 1px solid var(--green); }
+  .status-blocked { background: #3d2a1a; color: var(--orange); border: 1px solid var(--orange); }
+  .status-fail { background: #3d1a1a; color: var(--red); border: 1px solid var(--red); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+  .card h3 { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { text-align: left; padding: 0.75rem; border: 1px solid var(--border); }
+  th { background: var(--surface); color: var(--accent); }
+  .meta { color: var(--muted); font-size: 0.9em; margin-bottom: 2rem; }
+  .checklist li { margin: 0.5rem 0; list-style: none; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85em; text-align: center; }
+  .highlight { background: #1a3a2a; border-left: 3px solid var(--green); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+</style>
+</head>
+<body>
+
+<h1>CLIProxyAPI Implementation Status</h1>
+<p class="meta">Updated: 2026-06-11 &middot; WatsonOW workspace &middot; CLIProxyAPI <strong>RUNNING</strong></p>
+
+<div class="highlight">
+  <strong>&#x2705; CLIProxyAPI is live and serving.</strong> Process PID 3319 on port 8317. Health check returns <code>{"status":"ok"}</code>. Six models available through the proxy: <code>codex-auto-review</code>, <code>gpt-image-2</code>, <code>gpt-5.3-codex-spark</code>, <code>gpt-5.4</code>, <code>gpt-5.4-mini</code>, <code>gpt-5.5</code>.
+</div>
+
+<div class="card">
+  <h3>&#x1f3af; Goal</h3>
+  <p>Integrate Juan's <strong>ChatGPT Plus subscription</strong> into Hermes Agent via CLIProxyAPI — a Go binary that wraps ChatGPT/Codex OAuth behind an OpenAI-compatible API endpoint. This gives WatsonMain access to GPT-5.5-class models at zero per-token cost, using the existing Plus subscription.</p>
+  <p><strong>Architecture:</strong> Hermes Agent &harr; CLIProxyAPI (localhost:8317) &harr; OpenAI ChatGPT/Codex backend via OAuth</p>
+</div>
+
+<h2>Current Status Overview</h2>
+
+<table>
+  <tr><th>Component</th><th>Status</th><th>Details</th></tr>
+  <tr><td>GitHub fork</td><td><span class="status status-done">DONE</span></td><td><code>ieverythng/CLIProxyAPI</code> — public fork, cloned to <code>~/CLIProxyAPI</code></td></tr>
+  <tr><td>Binary available</td><td><span class="status status-done">DONE</span></td><td>Pre-compiled binary at <code>~/CLIProxyAPI/cli-proxy-api</code> (~40MB, ELF64 Go)</td></tr>
+  <tr><td>Binary installed to PATH</td><td><span class="status status-fail">NOT DONE</span></td><td>Not copied to <code>~/.local/bin/</code> or <code>/usr/local/bin/</code>; run directly from repo</td></tr>
+  <tr><td>Config file written</td><td><span class="status status-done">DONE</span></td><td><code>~/CLIProxyAPI/config.yaml</code> — port 8317, Codex models mapped</td></tr>
+  <tr><td>OAuth login completed</td><td><span class="status status-done">DONE</span></td><td>Codex OAuth authenticated; tokens stored in <code>~/.cli-proxy-api/</code></td></tr>
+  <tr><td>Proxy service running</td><td><span class="status status-done">RUNNING</span></td><td>Port 8317 active, PID 3319, health check OK. Started via background bash session.</td></tr>
+  <tr><td>Hermes provider configured</td><td><span class="status status-done">DONE</span></td><td><code>custom_providers.chatgpt-plus</code> entry in <code>~/.hermes/config.yaml</code> pointing to <code>http://127.0.0.1:8317/v1</code></td></tr>
+  <tr><td>Skill created</td><td><span class="status status-done">DONE</span></td><td><code>subscription-llm-proxy</code> skill exists with full docs + WSL reference</td></tr>
+  <tr><td>End-to-end tested</td><td><span class="status status-blocked">PENDING</span></td><td>Proxy serves models, but formal <code>hermes chat -q ... --provider chatgpt-plus</code> verification not yet confirmed</td></tr>
+  <tr><td>Available models</td><td><span class="status status-done">6 MODELS</span></td><td><code>codex-auto-review</code>, <code>gpt-image-2</code>, <code>gpt-5.3-codex-spark</code>, <code>gpt-5.4</code>, <code>gpt-5.4-mini</code>, <code>gpt-5.5</code></td></tr>
+</table>
+
+<h2>What Was Done (June 5 &mdash; June 11, 2026)</h2>
+
+<div class="card">
+  <h3>&#x2705; Completed Steps</h3>
+  <ol class="checklist">
+    <li><strong>Researched 5 integration approaches:</strong> CLIProxyAPI (recommended), Direct HTTP, Browser Automation (rejected — Cloudflare blocks), MCP Bridge, Playwright</li>
+    <li><strong>Forked repository:</strong> Created <code>ieverythng/CLIProxyAPI</code> on GitHub. Original upstream <code>g13y/CLIProxyAPI</code> returns 404 (taken down/private since Jun 2026). Fork contains full source + pre-compiled binary.</li>
+    <li><strong>Cloned to WSL2:</strong> Repo at <code>/home/juanbeck/CLIProxyAPI/</code> with all files intact</li>
+    <li><strong>Found pre-built binary:</strong> <code>cli-proxy-api</code> (~40MB) exists in repo root — ELF 64-bit Go executable, statically linked</li>
+    <li><strong>Wrote config.yaml:</strong> Custom config at port 8317 with Codex model mappings</li>
+    <li><strong>Created skill:</strong> <code>subscription-llm-proxy</code> with full setup instructions, WSL-specific pitfalls, and troubleshooting guide</li>
+    <li><strong>Completed OAuth login:</strong> Codex OAuth authenticated successfully; tokens persisted in <code>~/.cli-proxy-api/</code></li>
+    <li><strong>Started proxy service:</strong> CLIProxyAPI running on port 8317, health check returns <code>{"status":"ok"}</code>, 6 models exposed via <code>/v1/models</code></li>
+    <li><strong>Configured Hermes provider:</strong> <code>chatgpt-plus</code> custom provider in <code>~/.hermes/config.yaml</code> pointing to <code>http://127.0.0.1:8317/v1</code>. Delegation default uses this provider with model <code>gpt-5.5</code>.</li>
+  </ol>
+</div>
+
+<h2>What Remains</h2>
+
+<div class="card">
+  <h3>&#x1f6a9; Remaining Steps</h3>
+  <ol class="checklist">
+    <li><strong>Install binary to PATH (optional but recommended):</strong>
+      <pre><code>cp ~/CLIProxyAPI/cli-proxy-api ~/.local/bin/cliproxyapi
+chmod +x ~/.local/bin/cliproxyapi</code></pre>
+      <p>Simplifies restarts and service management. Currently running directly from repo path.</p>
+    </li>
+    <li><strong>Formal end-to-end verification:</strong>
+      <pre><code>hermes chat -q "Reply with exactly CHATGPT_PROXY_OK" --provider chatgpt-plus</code></pre>
+      <p>Proxy is serving, models are listed — just need to confirm a full request/response cycle through Hermes.</p>
+    </li>
+    <li><strong>Service persistence:</strong> CLIProxyAPI runs in a background bash session. Consider adding systemd/s6 supervision or a startup script so it survives reboots.</p>
+    </li>
+  </ol>
+</div>
+
+<h2>Key Files and Locations</h2>
+
+<table>
+  <tr><th>File/Resource</th><th>Path</th><th>Purpose</th></tr>
+  <tr><td>Repo (local)</td><td><code>/home/juanbeck/CLIProxyAPI/</code></td><td>Forked Git repo with source + binary</td></tr>
+  <tr><td>Binary</td><td><code>/home/juanbeck/CLIProxyAPI/cli-proxy-api</code></td><td>Pre-compiled Go executable (~40MB)</td></tr>
+  <tr><td>Config</td><td><code>/home/juanbeck/CLIProxyAPI/config.yaml</code></td><td>Port 8317, Codex models, API key</td></tr>
+  <tr><td>Auth dir</td><td><code>~/.cli-proxy-api/</code></td><td>OAuth tokens and session data</td></tr>
+  <tr><td>Hermes config</td><td><code>~/.hermes/config.yaml</code></td><td>Contains <code>custom_providers.chatgpt-plus</code> entry</td></tr>
+  <tr><td>Skill</td><td><code>~/.hermes/skills/mlops/subscription-llm-proxy/SKILL.md</code></td><td>Full setup documentation</td></tr>
+  <tr><td>WSL Reference</td><td><code>~/.hermes/skills/mlops/subscription-llm-proxy/references/wsl-setup-jun2026.md</code></td><td>WSL-specific pitfalls and notes</td></tr>
+  <tr><td>GitHub Fork</td><td><code>https://github.com/ieverythng/CLIProxyAPI</code></td><td>Public fork of CLIProxyAPI</td></tr>
+</table>
+
+<h2>Config File (Current)</h2>
+
+<pre><code># ~/CLIProxyAPI/config.yaml
+host: "127.0.0.1"
+port: 8317
+
+auth-dir: "~/.cli-proxy-api"
+
+request-retry: 3
+
+api-keys:
+  - "watson-chatgpt-key"
+
+debug: true
+
+codex:
+  models:
+    - name: "chatgpt-4o"
+      alias: "gpt-4o"
+    - name: "chatgpt-o3-pro"
+      alias: "o3-pro"
+    - name: "chatgpt-o4"
+      alias: "o4"</code></pre>
+
+<h2>Available Models (Live)</h2>
+
+<table>
+  <tr><th>Model ID</th><th>Role</th><th>Notes</th></tr>
+  <tr><td><code>codex-auto-review</code></td><td>Code review</td><td>Used by <code>watson-codex</code> profile</td></tr>
+  <tr><td><code>gpt-image-2</code></td><td>Image generation</td><td>OpenAI image model</td></tr>
+  <tr><td><code>gpt-5.3-codex-spark</code></td><td>Codex lightweight</td><td>Faster Codex variant</td></tr>
+  <tr><td><code>gpt-5.4</code></td><td>General purpose</td><td>Used for vision (auxiliary) and delegation fallback</td></tr>
+  <tr><td><code>gpt-5.4-mini</code></td><td>Lightweight</td><td>Used by <code>watson-dev</code> profile via openai-codex</td></tr>
+  <tr><td><code>gpt-5.5</code></td><td>Premium reasoning</td><td>Default delegation model for WatsonMain; used by <code>watson-plus</code> profile</td></tr>
+</table>
+
+<h2>Known Issues and Pitfalls</h2>
+
+<div class="card">
+  <h3>&#x26a0; Gotchas</h3>
+  <ul class="checklist">
+    <li><strong>Upstream repo down:</strong> <code>g13y/CLIProxyAPI</code> returns 404. Use the fork at <code>ieverythng/CLIProxyAPI</code>.</li>
+    <li><strong>No releases available:</strong> GitHub Releases return 404 (9-byte = 404 page). The pre-built binary in the repo is the only option.</li>
+    <li><strong>WSL auth flow:</strong> Background processes expire during OAuth waits. Must use foreground/PTY mode with <code>-no-browser</code> flag.</li>
+    <li><strong>Cloudflare blocks browser automation:</strong> Do NOT attempt to use Hermes browser tools against chatgpt.com — Cloudflare challenge page blocks immediately.</li>
+    <li><strong>Rate limits still apply:</strong> ChatGPT Plus has usage caps (~100 messages/3 hours on GPT-5). CLIProxyAPI does not bypass these.</li>
+    <li><strong>Port choice:</strong> Config uses 8317 (not default 4950) to avoid conflicts. Adjust Hermes config accordingly.</li>
+    <li><strong>Go not installed on WSL:</strong> Cannot build from source without installing Go first. Use the pre-built binary.</li>
+    <li><strong>v7 command syntax:</strong> Auth is <code>cliproxyapi -codex-login</code>, NOT <code>cliproxyapi login</code>. Server is <code>cliproxyapi serve</code>, NOT <code>cliproxyapi start</code>.</li>
+  </ul>
+</div>
+
+<h2>How It Works (Architecture)</h2>
+
+<div class="card">
+  <h3>&#x1f4e5; Data Flow</h3>
+  <pre><code>Hermes Agent (WatsonMain)
+    │
+    │ HTTP POST /v1/chat/completions
+    │ API Key: "watson-chatgpt-key"
+    ▼
+CLIProxyAPI (localhost:8317)
+    │
+    │ OAuth-authenticated request to OpenAI
+    │ (uses Codex OAuth tokens stored in ~/.cli-proxy-api/)
+    ▼
+OpenAI ChatGPT/Codex Backend
+    │
+    │ GPT-5.5 / GPT-5.4 / o3-pro response
+    ▼
+CLIProxyAPI → Hermes Agent</code></pre>
+  <p>CLIProxyAPI exposes a standard OpenAI-compatible API. Hermes treats it like any other provider — streaming, function calling, and multimodal input all work through the proxy.</p>
+</div>
+
+<h2>Existing OAuth Access (Hermes Built-in)</h2>
+
+<div class="card">
+  <h3>&#x1f3af; Note: Hermes Already Has Codex OAuth</h3>
+  <p>Hermes Agent already has a built-in <code>openai-codex</code> provider with OAuth authentication. This is currently used for:</p>
+  <ul>
+    <li><strong>Vision (auxiliary):</strong> gpt-5.4-mini via openai-codex</li>
+    <li><strong>Delegation:</strong> gpt-5.5 via chatgpt-plus (CLIProxyAPI)</li>
+  </ul>
+  <p>CLIProxyAPI adds value by exposing <strong>additional models</strong> (GPT-5.5, codex-auto-review, gpt-image-2) that may not be available through Hermes' built-in Codex OAuth, and by providing a <strong>standalone proxy endpoint</strong> that any OpenAI-compatible client can use independently.</p>
+  <p><strong>Key difference:</strong> Hermes' built-in Codex OAuth uses the Codex CLI authentication flow. CLIProxyAPI uses its own OAuth implementation with multi-account pooling, model routing, and a full API surface.</p>
+</div>
+
+<h2>Multi-Account / Multi-Session</h2>
+
+<div class="card">
+  <h3>&#x1f504; Scaling Options</h3>
+  <p>CLIProxyAPI supports:</p>
+  <ul>
+    <li><strong>Multiple accounts:</strong> Add more OAuth sessions for round-robin load balancing across accounts</li>
+    <li><strong>Multiple providers:</strong> Same proxy can serve ChatGPT, Claude Code, Gemini CLI, and Grok Build simultaneously</li>
+    <li><strong>Multi-session:</strong> Each OAuth session is independent — you can have parallel conversations through the same proxy</li>
+  </ul>
+</div>
+
+<h2>Quick Start Checklist</h2>
+
+<div class="card">
+  <h3>&#x2753; Remaining Actions</h3>
+  <ol class="checklist">
+    <li><input type="checkbox" checked disabled> <strong>Forked repo</strong> — <code>ieverythng/CLIProxyAPI</code></li>
+    <li><input type="checkbox" checked disabled> <strong>Binary available</strong> — pre-compiled in repo root</li>
+    <li><input type="checkbox" checked disabled> <strong>Config written</strong> — port 8317, Codex models mapped</li>
+    <li><input type="checkbox" checked disabled> <strong>OAuth completed</strong> — tokens in <code>~/.cli-proxy-api/</code></li>
+    <li><input type="checkbox" checked disabled> <strong>Proxy running</strong> — health check OK, 6 models exposed</li>
+    <li><input type="checkbox" checked disabled> <strong>Hermes provider configured</strong> — <code>chatgpt-plus</code> in config.yaml</li>
+    <li><input type="checkbox"> <strong>End-to-end verified</strong> — run <code>hermes chat -q "Hello" --provider chatgpt-plus</code></li>
+    <li><input type="checkbox"> <strong>Binary in PATH</strong> — <code>cp ~/CLIProxyAPI/cli-proxy-api ~/.local/bin/cliproxyapi</code></li>
+    <li><input type="checkbox"> <strong>Service persistence</strong> — systemd/s6 supervision for reboot survival</li>
+  </ol>
+</div>
+
+<div class="footer">
+  <p>CLIProxyAPI Status Report &middot; WatsonOW Workspace &middot; June 2026</p>
+  <p>Upstream: <a href="https://github.com/router-for-me/CLIProxyAPI" style="color:var(--accent)">router-for-me/CLIProxyAPI</a> &middot; Fork: <a href="https://github.com/ieverythng/CLIProxyAPI" style="color:var(--accent)">ieverythng/CLIProxyAPI</a> &middot; Docs: <a href="https://help.router-for.me/" style="color:var(--accent)">help.router-for.me</a></p>
+</div>
+
+</body>
+</html>

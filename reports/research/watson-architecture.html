@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watson Architecture Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --border: #30363d;
+    --text: #c9d1d9; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --red: #f85149; --orange: #d29922; --purple: #bc8cff;
+    --code-bg: #1c2128;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 2rem; color: #fff; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin: 2rem 0 1rem; }
+  h3 { font-size: 1.1rem; color: var(--purple); margin: 1.5rem 0 0.75rem; }
+  p { margin: 0.5rem 0; }
+  code { background: var(--code-bg); padding: 0.2em 0.4em; border-radius: 6px; font-size: 0.9em; }
+  pre { background: var(--code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+  pre code { background: none; padding: 0; }
+  .meta { color: var(--muted); font-size: 0.9em; margin-bottom: 2rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .status-badge { display: inline-block; padding: 0.25em 0.75em; border-radius: 999px; font-size: 0.8em; font-weight: 600; }
+  .s-ok { background: #1a3a2a; color: var(--green); border: 1px solid var(--green); }
+  .s-warn { background: #3d2a1a; color: var(--orange); border: 1px solid var(--orange); }
+  .s-fail { background: #3d1a1a; color: var(--red); border: 1px solid var(--red); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { text-align: left; padding: 0.75rem; border: 1px solid var(--border); }
+  th { background: var(--surface); color: var(--accent); }
+  .flow { font-family: monospace; white-space: pre; background: var(--code-bg); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); margin: 1rem 0; line-height: 1.3; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85em; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Watson Architecture Dashboard</h1>
+<p class="meta">Generated: 2026-06-11 &middot; WatsonOW workspace &middot; Hermes Agent runtime</p>
+
+<div class="grid">
+  <div class="card">
+    <h3>&#x1f3af; Main Agent</h3>
+    <p><strong>Model:</strong> <code>qwen36-turbo-hermes</code></p>
+    <p><strong>Provider:</strong> <code>watson-llama</code></p>
+    <p><strong>Endpoint:</strong> <code>http://172.24.16.1:8080/v1</code></p>
+    <p><strong>Status:</strong> <span class="status-badge s-ok">RUNNING</span></p>
+  </div>
+  <div class="card">
+    <h3>&#x1f4e5; CLIProxyAPI</h3>
+    <p><strong>Port:</strong> <code>8317</code></p>
+    <p><strong>PID:</strong> 3319</p>
+    <p><strong>Models:</strong> 6 available</p>
+    <p><strong>Status:</strong> <span class="status-badge s-ok">RUNNING</span></p>
+  </div>
+  <div class="card">
+    <h3>&#x1f5c4; Delegation Default</h3>
+    <p><strong>Model:</strong> <code>gpt-5.5</code></p>
+    <p><strong>Provider:</strong> <code>chatgpt-plus</code></p>
+    <p><strong>Via:</strong> CLIProxyAPI :8317</p>
+    <p><strong>Status:</strong> <span class="status-badge s-ok">CONFIGURED</span></p>
+  </div>
+</div>
+
+<h2>Hermes Profiles</h2>
+
+<table>
+  <tr><th>Profile</th><th>Model</th><th>Provider</th><th>Role</th><th>Status</th></tr>
+  <tr>
+    <td><code>default</code></td>
+    <td><code>qwen36-turbo-hermes</code></td>
+    <td><code>watson-llama</code></td>
+    <td>Main orchestrator — local-first, cheap default</td>
+    <td><span class="status-badge s-ok">RUNNING</span></td>
+  </tr>
+  <tr>
+    <td><code>watson-dev</code></td>
+    <td><code>gpt-5.4-mini</code></td>
+    <td><code>openai-codex</code></td>
+    <td>Coding, implementation, debugging</td>
+    <td><span class="status-badge s-warn">STOPPED</span></td>
+  </tr>
+  <tr>
+    <td><code>watson-plus</code></td>
+    <td><code>gpt-5.5</code></td>
+    <td><code>chatgpt-plus</code></td>
+    <td>Premium reasoning, strategic planning</td>
+    <td><span class="status-badge s-warn">STOPPED</span></td>
+  </tr>
+  <tr>
+    <td><code>watson-codex</code></td>
+    <td><code>codex-auto-review</code></td>
+    <td><code>chatgpt-plus</code></td>
+    <td>Automated code review, audit</td>
+    <td><span class="status-badge s-warn">STOPPED</span></td>
+  </tr>
+</table>
+
+<p><em>Note: Profiles are configuration templates — they define model/provider pairs for specialized sessions. "Stopped" means no separate gateway instance is bound; they run on-demand when invoked via <code>hermes chat --profile &lt;name&gt;</code>.</em></p>
+
+<h2>Available Models (CLIProxyAPI)</h2>
+
+<table>
+  <tr><th>Model</th><th>Role</th><th>Used By</th></tr>
+  <tr><td><code>codex-auto-review</code></td><td>Code review</td><td>watson-codex profile</td></tr>
+  <tr><td><code>gpt-image-2</code></td><td>Image generation</td><td>—</td></tr>
+  <tr><td><code>gpt-5.3-codex-spark</code></td><td>Codex lightweight</td><td>—</td></tr>
+  <tr><td><code>gpt-5.4</code></td><td>General purpose / vision</td><td>Vision auxiliary</td></tr>
+  <tr><td><code>gpt-5.4-mini</code></td><td>Lightweight</td><td>watson-dev profile</td></tr>
+  <tr><td><code>gpt-5.5</code></td><td>Premium reasoning</td><td>Delegation default, watson-plus</td></tr>
+</table>
+
+<h2>Architecture Diagram</h2>
+
+<div class="flow">
+                         WatsonOW Architecture
+
+   +-------------------+
+   |       User        |  Discord / CLI / App
+   +--------+----------+
+            |
+            v
+   +--------+----------+
+   | Watson Main Agent  |  Hermes primary session
+   | qwen36-turbo-hermes|  provider: watson-llama
+   +--------+-----------+
+            |
+     +------+------+
+     |             |
+     v             v
++----+-----+  +----+----------+
+|watson-llama|  |Delegation     |
+|172.24.16.1:|  |gpt-5.5       |
+|8080/v1     |  |chatgpt-plus  |
++-----+-----+  +----+----------+
+      |               |
+      v               v
++-----+------+  +-----+--------+
+|llama.cpp   |  |CLIProxyAPI   |
+|Windows host|  |:8317/v1      |
+|qwen36-turbo|  |OAuth bridge  |
++------------+  +-----+--------+
+                      |
+                      v
+               +------+-------+
+               |ChatGPT/Codex |
+               |Premium API   |
+               +--------------+
+
+   Optional: ZeroTier mesh for remote access
+</div>
+
+<h2>Data Flow Paths</h2>
+
+<div class="grid">
+  <div class="card">
+    <h3>&#x1f7e2; Local Path (default)</h3>
+    <pre><code>User → Watson Main Agent
+  → watson-llama provider
+  → http://172.24.16.1:8080/v1
+  → Windows llama.cpp server
+  → qwen36-turbo-hermes
+  → Response back to user</code></pre>
+    <p><em>Use for: straightforward tasks, low latency, privacy/locality preferred</em></p>
+  </div>
+  <div class="card">
+    <h3>&#x1f7e1; Premium Path (delegation)</h3>
+    <pre><code>User → Watson Main Agent
+  → task judged complex/high-value
+  → Hermes delegation
+  → chatgpt-plus provider
+  → CLIProxyAPI :8317
+  → ChatGPT web backend
+  → gpt-5.5 response
+  → Watson synthesizes final output</code></pre>
+    <p><em>Use for: stronger reasoning, long-form synthesis, review quality</em></p>
+  </div>
+</div>
+
+<h2>Infrastructure Components</h2>
+
+<table>
+  <tr><th>Component</th><th>Location</th><th>Endpoint</th><th>Status</th></tr>
+  <tr><td>Hermes Agent</td><td><code>~/.hermes/</code></td><td>Gateway on port 8001</td><td><span class="status-badge s-ok">RUNNING</span></td></tr>
+  <tr><td>llama.cpp server</td><td>Windows host</td><td><code>http://172.24.16.1:8080/v1</code></td><td><span class="status-badge s-ok">RUNNING</span></td></tr>
+  <tr><td>CLIProxyAPI</td><td><code>~/CLIProxyAPI/</code></td><td><code>http://127.0.0.1:8317/v1</code></td><td><span class="status-badge s-ok">RUNNING</span></td></tr>
+  <tr><td>Ollama</td><td>Windows host</td><td><code>http://172.24.16.1:11434</code></td><td><span class="status-badge s-warn">CONFIGURED</span></td></tr>
+  <tr><td>ZeroTier</td><td>Network mesh</td><td>ID: <code>3b19b3a716937e29</code></td><td><span class="status-badge s-warn">PLANNED</span></td></tr>
+</table>
+
+<h2>Monorepo Plan</h2>
+
+<div class="card">
+  <h3>&#x1f4c2; Consolidation Target</h3>
+  <p><strong>Decision:</strong> Use existing <code>ieverythng/Watson-bot</code> repo as the canonical monorepo. The local WatsonOW workspace at <code>/home/juanbeck/Watson</code> is already the working tree for this repo.</p>
+
+<div class="flow">
+Watson-bot/ (monorepo root)
+├── README.md, AGENTS.md, IDENTITY.md, ...  ← Watson control plane
+├── docs/
+├── reports/
+├── memory/
+├── skills/
+├── scripts/
+├── bank/
+├── infra/
+│   ├── compose/
+│   ├── env/
+│   ├── systemd/
+│   └── zerotier/
+├── src/
+│   ├── CLIProxyAPI/
+│   ├── zerotier-llm-proxy/
+│   ├── iChess-Sim/
+│   └── iTrack-Supply-Chain/
+└── tools/
+</div>
+
+  <p><strong>Import method:</strong> <code>git subtree</code> or <code>git filter-repo</code>-based history import (not manual file copying).</p>
+  <p><strong>Import order:</strong> zerotier-llm-proxy → CLIProxyAPI → iChess-Sim → iTrack-Supply-Chain</p>
+</div>
+
+<h2>Known Issues</h2>
+
+<div class="card">
+  <ul>
+    <li><span class="status-badge s-ok">RESOLVED</span> <strong>Profile configs cleaned</strong> — line-number prefix issue fixed (2026-06-11)</li>
+    <li><span class="status-badge s-warn">OPEN</span> <strong>Split-source architecture</strong> — Watson spans multiple repos; monorepo plan exists but not executed</li>
+    <li><span class="status-badge s-warn">OPEN</span> <strong>CLIProxyAPI persistence</strong> — running in background bash session, no systemd/s6 supervision for reboot survival</li>
+    <li><span class="status-badge s-warn">OPEN</span> <strong>Upstream repo down</strong> — original g13y/CLIProxyAPI returns 404; using fork at ieverythng/CLIProxyAPI</li>
+    <li><span class="status-badge s-warn">OPEN</span> <strong>Network topology drift</strong> — ZeroTier, localhost, WSL bridging can diverge without consistent scripting</li>
+  </ul>
+</div>
+
+<h2>Quick Commands</h2>
+
+<div class="card">
+  <pre><code># Check CLIProxyAPI health
+curl -s http://127.0.0.1:8317/healthz
+
+# List available models
+curl -s -H "Authorization: Bearer watson-chatgpt-key" \
+  http://127.0.0.1:8317/v1/models | python3 -m json.tool
+
+# Use a specific profile
+hermes chat --profile watson-plus
+hermes chat --profile watson-dev
+hermes chat --profile watson-codex
+
+# Use CLIProxyAPI models directly
+hermes chat -m gpt-5.5 --provider chatgpt-plus
+hermes chat -m gpt-5.4-mini --provider chatgpt-plus
+
+# List profiles
+hermes profile list
+
+# Restart CLIProxyAPI
+cd ~/CLIProxyAPI && ./cli-proxy-api --config config.yaml</code></pre>
+</div>
+
+<div class="footer">
+  <p>Watson Architecture Dashboard &middot; WatsonOW Workspace &middot; June 2026</p>
+  <p>Source: <code>/home/juanbeck/Watson/reports/research/watson-architecture.md</code></p>
+</div>
+
+</body>
+</html>

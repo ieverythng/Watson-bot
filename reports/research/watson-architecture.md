@@ -60,7 +60,7 @@ At a high level:
 
 Authoritative root Hermes config: `~/.hermes/config.yaml`
 
-Validated core settings:
+Validated core settings (verified 2026-06-11):
 
 - default model: `qwen36-turbo-hermes`
 - default provider: `watson-llama`
@@ -82,30 +82,30 @@ Profiles exist under `~/.hermes/profiles/`:
 - `watson-plus`
 - `watson-codex`
 
-Important operational note:
-
-- these profile `config.yaml` files currently contain **embedded line-number prefixes** such as `4|  max_tokens: 8192`
-- that makes them malformed YAML in their present state
-- the root config remains the authoritative valid configuration source
-- the profile documents below describe the **intended runtime roles** based on the visible defaults in those files and the provided system context
+**Status update (2026-06-11):** Profile configs have been cleaned — the line-number prefix issue has been resolved. All three profiles now contain valid YAML with clean config files.
 
 ### watson-dev
 
 - default model: `gpt-5.4-mini`
-- provider: `openai-codex`
+- provider: `openai-codex` (Hermes built-in Codex OAuth)
 - role: coding, implementation, debugging, tool-heavy execution
+- gateway status: **stopped** (profile exists but not running as separate gateway instance)
 
 ### watson-plus
 
 - default model: `gpt-5.5`
-- provider: `chatgpt-plus`
+- provider: `chatgpt-plus` (via CLIProxyAPI on port 8317)
 - role: premium reasoning, deeper synthesis, strategic planning
+- gateway status: **stopped** (profile exists but not running as separate gateway instance)
 
 ### watson-codex
 
 - default model: `codex-auto-review`
-- provider: `chatgpt-plus`
+- provider: `chatgpt-plus` (via CLIProxyAPI on port 8317)
 - role: automated review, critique, and code-audit style passes
+- gateway status: **stopped** (profile exists but not running as separate gateway instance)
+
+**Note on profiles:** Profiles are configuration templates — they define model/provider pairs for specialized sessions. They are not independently running services. To use a profile, launch `hermes chat --profile watson-plus` or delegate with the profile specified. The "stopped" status in `hermes profile list` means no separate gateway instance is bound to that profile; it runs on-demand when invoked.
 
 ---
 
@@ -221,11 +221,22 @@ This is the primary, low-cost inference plane for Watson.
 
 CLIProxyAPI lives at:
 
-- repo: `/home/juanbeck/CLIProxyAPI`
+- repo: `/home/juanbeck/CLIProxyAPI` (forked from upstream, public at `ieverythng/CLIProxyAPI`)
 - bind host: `127.0.0.1`
 - port: `8317`
 - API key for Hermes: `watson-chatgpt-key`
 - auth directory: `~/.cli-proxy-api`
+
+**Status (verified 2026-06-11):** Service is **RUNNING**. PID 3319, health check returns `{"status":"ok"}`. Six models available via `/v1/models`:
+
+| Model ID | Role |
+|---|---|
+| `codex-auto-review` | Code review (watson-codex profile) |
+| `gpt-image-2` | Image generation |
+| `gpt-5.3-codex-spark` | Codex lightweight |
+| `gpt-5.4` | General purpose / vision auxiliary |
+| `gpt-5.4-mini` | Lightweight (watson-dev profile) |
+| `gpt-5.5` | Premium reasoning (default delegation, watson-plus profile) |
 
 Its role in the system is to expose an OpenAI-compatible local endpoint that Hermes can call while the proxy itself uses OAuth-backed ChatGPT/Codex access behind the scenes.
 
@@ -581,17 +592,20 @@ Or, in one sentence:
 
 ## 13. Risks and Current Gaps
 
-1. **Profile config corruption**  
-   The `watson-dev`, `watson-plus`, and `watson-codex` profile YAML files are malformed and should be regenerated or cleaned before being relied on operationally.
+1. **Profile configs cleaned** ~~(RESOLVED 2026-06-11)~~  
+   The `watson-dev`, `watson-plus`, and `watson-codex` profile YAML files have been regenerated with clean, valid YAML. No more line-number prefixes.
 
 2. **Split-source architecture**  
-   Watson currently spans multiple adjacent repos and service directories rather than a single monorepo root.
+   Watson currently spans multiple adjacent repos and service directories rather than a single monorepo root. The monorepo consolidation plan exists but has not been executed yet.
 
 3. **Provider dependency asymmetry**  
-   Local inference is self-hosted, but premium inference depends on a working CLIProxyAPI auth/session chain.
+   Local inference is self-hosted, but premium inference depends on a working CLIProxyAPI auth/session chain. CLIProxyAPI is currently running (PID 3319) but lacks persistent service management (systemd/s6 supervision).
 
 4. **Network topology drift risk**  
    ZeroTier, direct localhost access, WSL host bridging, and optional proxy layers can diverge unless documented and scripted consistently.
+
+5. **CLIProxyAPI upstream repo down**  
+   The original `g13y/CLIProxyAPI` returns 404. Watson uses the fork at `ieverythng/CLIProxyAPI`. No releases available — only the pre-built binary in the repo works.
 
 ---
 
