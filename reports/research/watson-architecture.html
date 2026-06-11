@@ -45,6 +45,7 @@
     <p><strong>Model:</strong> <code>qwen36-turbo-hermes</code></p>
     <p><strong>Provider:</strong> <code>watson-llama</code></p>
     <p><strong>Endpoint:</strong> <code>http://172.24.16.1:8080/v1</code></p>
+    <p><strong>Backend:</strong> Windows-hosted <code>llama.cpp</code></p>
     <p><strong>Status:</strong> <span class="status-badge s-ok">RUNNING</span></p>
   </div>
   <div class="card">
@@ -140,9 +141,9 @@
 |llama.cpp   |  |CLIProxyAPI   |
 |Windows host|  |:8317/v1      |
 |qwen36-turbo|  |OAuth bridge  |
-+------------+  +-----+--------+
-                      |
-                      v
+|sole local  |  +-----+--------+
+|inference   |        |
++------------+        v
                +------+-------+
                |ChatGPT/Codex |
                |Premium API   |
@@ -183,9 +184,8 @@
 <table>
   <tr><th>Component</th><th>Location</th><th>Endpoint</th><th>Status</th></tr>
   <tr><td>Hermes Agent</td><td><code>~/.hermes/</code></td><td>Gateway on port 8001</td><td><span class="status-badge s-ok">RUNNING</span></td></tr>
-  <tr><td>llama.cpp server</td><td>Windows host</td><td><code>http://172.24.16.1:8080/v1</code></td><td><span class="status-badge s-ok">RUNNING</span></td></tr>
+  <tr><td>Windows-hosted llama.cpp server</td><td>Windows host</td><td><code>http://172.24.16.1:8080/v1</code></td><td><span class="status-badge s-ok">SOLE LOCAL INFERENCE</span></td></tr>
   <tr><td>CLIProxyAPI</td><td><code>~/CLIProxyAPI/</code></td><td><code>http://127.0.0.1:8317/v1</code></td><td><span class="status-badge s-ok">RUNNING</span></td></tr>
-  <tr><td>Ollama</td><td>Windows host</td><td><code>http://172.24.16.1:11434</code></td><td><span class="status-badge s-warn">CONFIGURED</span></td></tr>
   <tr><td>ZeroTier</td><td>Network mesh</td><td>ID: <code>3b19b3a716937e29</code></td><td><span class="status-badge s-warn">PLANNED</span></td></tr>
 </table>
 
@@ -240,8 +240,11 @@ Watson-bot/ (monorepo root)
 curl -s http://127.0.0.1:8317/healthz
 
 # List available models
-curl -s -H "Authorization: Bearer watson-chatgpt-key" \
+curl -s -H "Authorization: Bearer ***" \
   http://127.0.0.1:8317/v1/models | python3 -m json.tool
+
+# Check local llama.cpp backend
+curl -s http://172.24.16.1:8080/v1/models | python3 -m json.tool
 
 # Use a specific profile
 hermes chat --profile watson-plus

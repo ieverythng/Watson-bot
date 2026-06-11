@@ -26,7 +26,7 @@ At a high level:
   - `watson-dev` → `gpt-5.4-mini` via `openai-codex`
   - `watson-plus` → `gpt-5.5` via `chatgpt-plus`
   - `watson-codex` → `codex-auto-review` via `chatgpt-plus`
-- **Local inference** is served by a Windows-hosted `llama.cpp` server exposed to WSL at `http://172.24.16.1:8080/v1`.
+- **Local inference** is served by a Windows-hosted `llama.cpp` server exposed to WSL at `http://172.24.16.1:8080/v1`. We do NOT use Ollama — all local inference runs through llama.cpp.
 - **Premium ChatGPT inference** is exposed locally through **CLIProxyAPI** on `http://127.0.0.1:8317/v1`, which bridges Hermes calls to ChatGPT web/OAuth-backed access.
 - **ZeroTier** is the private network layer intended to make the local LLM stack reachable across devices without exposing it publicly.
 

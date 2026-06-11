@@ -48,13 +48,13 @@
 <p class="meta">Updated: 2026-06-11 &middot; WatsonOW workspace &middot; CLIProxyAPI <strong>RUNNING</strong></p>
 
 <div class="highlight">
-  <strong>&#x2705; CLIProxyAPI is live and serving.</strong> Process PID 3319 on port 8317. Health check returns <code>{"status":"ok"}</code>. Six models available through the proxy: <code>codex-auto-review</code>, <code>gpt-image-2</code>, <code>gpt-5.3-codex-spark</code>, <code>gpt-5.4</code>, <code>gpt-5.4-mini</code>, <code>gpt-5.5</code>.
+  <strong>&#x2705; CLIProxyAPI is live and serving.</strong> Process PID 3319 on port 8317. Health check returns <code>{"status":"ok"}</code>. Six models available through the proxy: <code>codex-auto-review</code>, <code>gpt-image-2</code>, <code>gpt-5.3-codex-spark</code>, <code>gpt-5.4</code>, <code>gpt-5.4-mini</code>, <code>gpt-5.5</code>. Local inference is handled by the Windows-hosted <strong>llama.cpp</strong> server at <code>http://172.24.16.1:8080/v1</code>.
 </div>
 
 <div class="card">
   <h3>&#x1f3af; Goal</h3>
   <p>Integrate Juan's <strong>ChatGPT Plus subscription</strong> into Hermes Agent via CLIProxyAPI — a Go binary that wraps ChatGPT/Codex OAuth behind an OpenAI-compatible API endpoint. This gives WatsonMain access to GPT-5.5-class models at zero per-token cost, using the existing Plus subscription.</p>
-  <p><strong>Architecture:</strong> Hermes Agent &harr; CLIProxyAPI (localhost:8317) &harr; OpenAI ChatGPT/Codex backend via OAuth</p>
+  <p><strong>Architecture:</strong> Hermes Agent &harr; CLIProxyAPI (localhost:8317) &harr; OpenAI ChatGPT/Codex backend via OAuth. WatsonMain's local/default inference backend is the Windows-hosted llama.cpp server at <code>http://172.24.16.1:8080/v1</code>.</p>
 </div>
 
 <h2>Current Status Overview</h2>
@@ -67,9 +67,10 @@
   <tr><td>Config file written</td><td><span class="status status-done">DONE</span></td><td><code>~/CLIProxyAPI/config.yaml</code> — port 8317, Codex models mapped</td></tr>
   <tr><td>OAuth login completed</td><td><span class="status status-done">DONE</span></td><td>Codex OAuth authenticated; tokens stored in <code>~/.cli-proxy-api/</code></td></tr>
   <tr><td>Proxy service running</td><td><span class="status status-done">RUNNING</span></td><td>Port 8317 active, PID 3319, health check OK. Started via background bash session.</td></tr>
+  <tr><td>llama.cpp inference backend</td><td><span class="status status-done">RUNNING</span></td><td>Windows-hosted llama.cpp server at <code>http://172.24.16.1:8080/v1</code>; <code>/v1/models</code> returns <code>qwen36-turbo-hermes</code></td></tr>
   <tr><td>Hermes provider configured</td><td><span class="status status-done">DONE</span></td><td><code>custom_providers.chatgpt-plus</code> entry in <code>~/.hermes/config.yaml</code> pointing to <code>http://127.0.0.1:8317/v1</code></td></tr>
   <tr><td>Skill created</td><td><span class="status status-done">DONE</span></td><td><code>subscription-llm-proxy</code> skill exists with full docs + WSL reference</td></tr>
-  <tr><td>End-to-end tested</td><td><span class="status status-blocked">PENDING</span></td><td>Proxy serves models, but formal <code>hermes chat -q ... --provider chatgpt-plus</code> verification not yet confirmed</td></tr>
+  <tr><td>End-to-end tested</td><td><span class="status status-blocked">PARTIAL</span></td><td>Proxy health and model listing verified. Hermes provider-only test currently routes default <code>qwen36-turbo-hermes</code> to CLIProxyAPI and returns HTTP 502; use an explicit CLIProxyAPI model such as <code>-m gpt-5.5</code> for final verification.</td></tr>
   <tr><td>Available models</td><td><span class="status status-done">6 MODELS</span></td><td><code>codex-auto-review</code>, <code>gpt-image-2</code>, <code>gpt-5.3-codex-spark</code>, <code>gpt-5.4</code>, <code>gpt-5.4-mini</code>, <code>gpt-5.5</code></td></tr>
 </table>
 
@@ -86,6 +87,7 @@
     <li><strong>Created skill:</strong> <code>subscription-llm-proxy</code> with full setup instructions, WSL-specific pitfalls, and troubleshooting guide</li>
     <li><strong>Completed OAuth login:</strong> Codex OAuth authenticated successfully; tokens persisted in <code>~/.cli-proxy-api/</code></li>
     <li><strong>Started proxy service:</strong> CLIProxyAPI running on port 8317, health check returns <code>{"status":"ok"}</code>, 6 models exposed via <code>/v1/models</code></li>
+    <li><strong>Verified local inference backend:</strong> Windows-hosted llama.cpp server at <code>http://172.24.16.1:8080/v1</code> responds to <code>/v1/models</code> with <code>qwen36-turbo-hermes</code></li>
     <li><strong>Configured Hermes provider:</strong> <code>chatgpt-plus</code> custom provider in <code>~/.hermes/config.yaml</code> pointing to <code>http://127.0.0.1:8317/v1</code>. Delegation default uses this provider with model <code>gpt-5.5</code>.</li>
   </ol>
 </div>
@@ -95,17 +97,16 @@
 <div class="card">
   <h3>&#x1f6a9; Remaining Steps</h3>
   <ol class="checklist">
+    <li><strong>Run formal end-to-end verification with an explicit supported model:</strong>
+      <pre><code>hermes chat -q "Reply with exactly CHATGPT_PROXY_OK" --provider chatgpt-plus -m gpt-5.5</code></pre>
+      <p>As of 2026-06-11, CLIProxyAPI health and <code>/v1/models</code> are verified, and the process is live as PID 3319 on port 8317. A provider-only Hermes test without <code>-m</code> used the default local model <code>qwen36-turbo-hermes</code>, which CLIProxyAPI does not serve, and correctly returned HTTP 502. The final check must target one of the six CLIProxyAPI model IDs.</p>
+    </li>
     <li><strong>Install binary to PATH (optional but recommended):</strong>
       <pre><code>cp ~/CLIProxyAPI/cli-proxy-api ~/.local/bin/cliproxyapi
 chmod +x ~/.local/bin/cliproxyapi</code></pre>
       <p>Simplifies restarts and service management. Currently running directly from repo path.</p>
     </li>
-    <li><strong>Formal end-to-end verification:</strong>
-      <pre><code>hermes chat -q "Reply with exactly CHATGPT_PROXY_OK" --provider chatgpt-plus</code></pre>
-      <p>Proxy is serving, models are listed — just need to confirm a full request/response cycle through Hermes.</p>
-    </li>
-    <li><strong>Service persistence:</strong> CLIProxyAPI runs in a background bash session. Consider adding systemd/s6 supervision or a startup script so it survives reboots.</p>
-    </li>
+    <li><strong>Service persistence:</strong> CLIProxyAPI runs in a background bash session. Consider adding systemd/s6 supervision or a startup script so it survives reboots.</li>
   </ol>
 </div>
 
@@ -117,7 +118,8 @@ chmod +x ~/.local/bin/cliproxyapi</code></pre>
   <tr><td>Binary</td><td><code>/home/juanbeck/CLIProxyAPI/cli-proxy-api</code></td><td>Pre-compiled Go executable (~40MB)</td></tr>
   <tr><td>Config</td><td><code>/home/juanbeck/CLIProxyAPI/config.yaml</code></td><td>Port 8317, Codex models, API key</td></tr>
   <tr><td>Auth dir</td><td><code>~/.cli-proxy-api/</code></td><td>OAuth tokens and session data</td></tr>
-  <tr><td>Hermes config</td><td><code>~/.hermes/config.yaml</code></td><td>Contains <code>custom_providers.chatgpt-plus</code> entry</td></tr>
+  <tr><td>Hermes config</td><td><code>~/.hermes/config.yaml</code></td><td>Contains <code>custom_providers.chatgpt-plus</code> entry and <code>watson-llama</code> pointing at llama.cpp</td></tr>
+  <tr><td>llama.cpp endpoint</td><td><code>http://172.24.16.1:8080/v1</code></td><td>Windows-hosted local inference backend serving <code>qwen36-turbo-hermes</code></td></tr>
   <tr><td>Skill</td><td><code>~/.hermes/skills/mlops/subscription-llm-proxy/SKILL.md</code></td><td>Full setup documentation</td></tr>
   <tr><td>WSL Reference</td><td><code>~/.hermes/skills/mlops/subscription-llm-proxy/references/wsl-setup-jun2026.md</code></td><td>WSL-specific pitfalls and notes</td></tr>
   <tr><td>GitHub Fork</td><td><code>https://github.com/ieverythng/CLIProxyAPI</code></td><td>Public fork of CLIProxyAPI</td></tr>
@@ -170,6 +172,7 @@ codex:
     <li><strong>Cloudflare blocks browser automation:</strong> Do NOT attempt to use Hermes browser tools against chatgpt.com — Cloudflare challenge page blocks immediately.</li>
     <li><strong>Rate limits still apply:</strong> ChatGPT Plus has usage caps (~100 messages/3 hours on GPT-5). CLIProxyAPI does not bypass these.</li>
     <li><strong>Port choice:</strong> Config uses 8317 (not default 4950) to avoid conflicts. Adjust Hermes config accordingly.</li>
+    <li><strong>Local inference backend:</strong> WatsonMain uses the Windows-hosted llama.cpp server at <code>http://172.24.16.1:8080/v1</code>; do not route <code>qwen36-turbo-hermes</code> through CLIProxyAPI.</li>
     <li><strong>Go not installed on WSL:</strong> Cannot build from source without installing Go first. Use the pre-built binary.</li>
     <li><strong>v7 command syntax:</strong> Auth is <code>cliproxyapi -codex-login</code>, NOT <code>cliproxyapi login</code>. Server is <code>cliproxyapi serve</code>, NOT <code>cliproxyapi start</code>.</li>
   </ul>
@@ -181,20 +184,27 @@ codex:
   <h3>&#x1f4e5; Data Flow</h3>
   <pre><code>Hermes Agent (WatsonMain)
     │
-    │ HTTP POST /v1/chat/completions
-    │ API Key: "watson-chatgpt-key"
-    ▼
-CLIProxyAPI (localhost:8317)
+    ├── Local/default inference
+    │     HTTP POST /v1/chat/completions
+    │     ▼
+    │   llama.cpp server (Windows host, 172.24.16.1:8080/v1)
+    │     qwen36-turbo-hermes
     │
-    │ OAuth-authenticated request to OpenAI
-    │ (uses Codex OAuth tokens stored in ~/.cli-proxy-api/)
-    ▼
-OpenAI ChatGPT/Codex Backend
-    │
-    │ GPT-5.5 / GPT-5.4 / o3-pro response
-    ▼
-CLIProxyAPI → Hermes Agent</code></pre>
-  <p>CLIProxyAPI exposes a standard OpenAI-compatible API. Hermes treats it like any other provider — streaming, function calling, and multimodal input all work through the proxy.</p>
+    └── Premium/delegated inference
+          HTTP POST /v1/chat/completions
+          API Key: "watson-chatgpt-key"
+          ▼
+        CLIProxyAPI (localhost:8317, PID 3319)
+          │
+          │ OAuth-authenticated request to OpenAI
+          │ (uses Codex OAuth tokens stored in ~/.cli-proxy-api/)
+          ▼
+        OpenAI ChatGPT/Codex Backend
+          │
+          │ GPT-5.5 / GPT-5.4 / codex-auto-review response
+          ▼
+        CLIProxyAPI → Hermes Agent</code></pre>
+  <p>CLIProxyAPI exposes a standard OpenAI-compatible API for ChatGPT/Codex models. The local Watson inference backend is separately served by llama.cpp on the Windows host at <code>http://172.24.16.1:8080/v1</code>.</p>
 </div>
 
 <h2>Existing OAuth Access (Hermes Built-in)</h2>
@@ -231,9 +241,10 @@ CLIProxyAPI → Hermes Agent</code></pre>
     <li><input type="checkbox" checked disabled> <strong>Binary available</strong> — pre-compiled in repo root</li>
     <li><input type="checkbox" checked disabled> <strong>Config written</strong> — port 8317, Codex models mapped</li>
     <li><input type="checkbox" checked disabled> <strong>OAuth completed</strong> — tokens in <code>~/.cli-proxy-api/</code></li>
-    <li><input type="checkbox" checked disabled> <strong>Proxy running</strong> — health check OK, 6 models exposed</li>
+    <li><input type="checkbox" checked disabled> <strong>Proxy running</strong> — PID 3319, health check OK, 6 models exposed</li>
+    <li><input type="checkbox" checked disabled> <strong>llama.cpp running</strong> — Windows-hosted local inference at <code>172.24.16.1:8080/v1</code></li>
     <li><input type="checkbox" checked disabled> <strong>Hermes provider configured</strong> — <code>chatgpt-plus</code> in config.yaml</li>
-    <li><input type="checkbox"> <strong>End-to-end verified</strong> — run <code>hermes chat -q "Hello" --provider chatgpt-plus</code></li>
+    <li><input type="checkbox"> <strong>End-to-end verified</strong> — run <code>hermes chat -q "Hello" --provider chatgpt-plus -m gpt-5.5</code></li>
     <li><input type="checkbox"> <strong>Binary in PATH</strong> — <code>cp ~/CLIProxyAPI/cli-proxy-api ~/.local/bin/cliproxyapi</code></li>
     <li><input type="checkbox"> <strong>Service persistence</strong> — systemd/s6 supervision for reboot survival</li>
   </ol>
