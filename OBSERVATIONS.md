@@ -206,3 +206,27 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: OM writing loop dormancy persists: 4 days since last OBSERVATIONS.md update, 7+ weeks since last REFLECTIONS.md entry. Sweep cron jobs execute but do not produce new durable observations — the loop captures events to daily memory without flushing to durable lanes.
   - `evidence`: OBSERVATIONS.md (last pre-today: O-2026-05-30-01), REFLECTIONS.md (last: R-2026-03-17-01), memory/2026-05-30.md
   - `expires`: none
+
+- `id`: O-2026-06-08-01
+  - `timestamp`: 2026-06-08T19:47:17Z
+  - `scope`: infra
+  - `confidence`: 0.95
+  - `observation`: Post-subagent token usage report script deployed: queries Hermes state.db for child session token counts, shows per-model breakdown with cost, and displays 5hr/weekly budget percentages. Callable after every delegate_task to track ChatGPT Plus consumption.
+  - `evidence`: commit 1923b9f, scripts/subagent_token_report.py, scripts/subagent_token_report.sh
+  - `expires`: none
+
+- `id`: O-2026-06-08-02
+  - `timestamp`: 2026-06-08T19:47:23Z
+  - `scope`: process
+  - `confidence`: 0.96
+  - `observation`: OM writing loop dormancy persists: 5 days since last OBSERVATIONS.md update and 10+ weeks since last REFLECTIONS.md entry. Sweep cron jobs execute but do not produce new durable observations — the loop captures events to daily memory without flushing to durable lanes.
+  - `evidence`: OBSERVATIONS.md (last pre-today: O-2026-06-03-03), REFLECTIONS.md (last: R-2026-03-17-01), memory/2026-06-03.md
+  - `expires`: none
+
+- `id`: O-2026-06-11-01
+  - `timestamp`: 2026-06-11T03:19:16Z
+  - `scope`: infra
+  - `confidence`: 0.97
+  - `observation`: CLIProxyAPI deployed as ChatGPT Plus proxy: binary at /home/juanbeck/CLIProxyAPI/cli-proxy-api, serving on port 8317 with OAuth auth. Hermes config updated with chatgpt-plus custom provider routing to http://127.0.0.1:8317/v1. Available models via proxy: gpt-5.3-codex-spark, gpt-5.4, gpt-5.4-mini, gpt-5.5, codex-auto-review, gpt-image-2. End-to-end verified with tool calling on GPT-5.5.
+  - `evidence`: memory/2026-06-11.md, ~/.hermes/config.yaml (lines 680-685), /home/juanbeck/CLIProxyAPI/config.yaml
+  - `expires`: none
