@@ -181,6 +181,42 @@ During a heartbeat:
 - log a trace only if a meaningful check or action occurred
 - return `HEARTBEAT_OK` when nothing needs attention
 
+## GPT-Oracle
+
+The GPT-Oracle provides expert guidance via GPT-5 models for complex reasoning tasks.
+
+### Current Architecture (webchat2api proxy)
+- **Script:** `bash /home/juanbeck/Watson/scripts/ask-gpt5.sh "prompt" [model]`
+- **Proxy:** webchat2api on port 9000 (ChatGPT Plus session)
+- **Models:** `gpt-5`, `gpt-5-5`, `gpt-5-5-thinking`
+- **Limits:** ~50 messages per 8-hour window (resets ~8:44 PM UTC)
+- **Capability:** Text-only — NO function calling, NO tool use
+- **Auth:** x-api-key `***` via CLIProxyAPI refresh token
+
+### Oracle-Verified Facts (GPT-5.5 Thinking, 2026-06-12)
+- ChatGPT built-in tools (Browse, Code Interpreter, DALL-E), Agent Mode, and Developer Mode/MCP are **UI-only features** — cannot be triggered programmatically via webchat2api or any headless proxy
+- The **only path to automated tool calling** is via the OpenAI API with function calling
+- MCP + Developer Mode enriches human-driven ChatGPT sessions but is not scriptable
+
+### Migration Plan (→ Direct OpenAI API)
+- **Target:** GPT-5.4 via OpenAI API with full function calling, structured outputs, higher rate limits
+- **Oracle recommendation:** Replace webchat2api entirely rather than maintain dual-path — use lighter model variants for simple queries to optimize cost
+- **Migration doc:** `reports/research/gpt5-oracle-migration.html`
+- **Phases:** Assessment → API Integration → Tool Layer → Testing → Deployment
+
+### When to Use the Oracle
+- Complex architecture decisions requiring expert reasoning
+- Security assessments and threat modeling
+- Performance optimization strategies
+- When local models lack sufficient capability for the task
+- For verification of technical claims before committing to them
+
+### When NOT to Use the Oracle
+- Simple factual lookups (use web_search)
+- Code generation (use delegation to Codex/ChatGPT Plus)
+- Memory maintenance and bookkeeping (use local model)
+- Tasks the front model can handle confidently
+
 ## Practical Standard
 
 Keep the system modular, auditable, and manually operable.
