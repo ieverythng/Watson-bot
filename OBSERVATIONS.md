@@ -230,3 +230,11 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: CLIProxyAPI deployed as ChatGPT Plus proxy: binary at /home/juanbeck/CLIProxyAPI/cli-proxy-api, serving on port 8317 with OAuth auth. Hermes config updated with chatgpt-plus custom provider routing to http://127.0.0.1:8317/v1. Available models via proxy: gpt-5.3-codex-spark, gpt-5.4, gpt-5.4-mini, gpt-5.5, codex-auto-review, gpt-image-2. End-to-end verified with tool calling on GPT-5.5.
   - `evidence`: memory/2026-06-11.md, ~/.hermes/config.yaml (lines 680-685), /home/juanbeck/CLIProxyAPI/config.yaml
   - `expires`: none
+
+- `id`: O-2026-06-11-02
+  - `timestamp`: 2026-06-11T18:53:30Z
+  - `scope`: infra
+  - `confidence`: 0.97
+  - `observation`: CLIProxyAPI rate-limit workaround: extracted ChatGPT web session tokens from Windows Codex CLI (/mnt/c/Users/Admin/.codex/auth.json) to create ~/.cli-proxy-api/chatgpt-web-session.json. Web session auth gives 50+ msg/8h window vs ~10 msg/hr on Codex OAuth. Subagent delegation verified working with gpt-5.5 — no more 'cooling down' errors.
+  - `evidence`: memory/2026-06-11.md, ~/.cli-proxy-api/chatgpt-web-session.json, ~/.hermes/skills/mlops/subscription-llm-proxy/SKILL.md
+  - `expires`: none

@@ -1,0 +1,102 @@
+{
+  "date": "2026-06-11",
+  "generated_at": "2026-06-11T18:14:12Z",
+  "hourly": {
+    "2026-06-11 03:00 CEST": {
+      "sessions": 4,
+      "input": 151868,
+      "output": 5093,
+      "cached": 1549607,
+      "cost": 0.0
+    },
+    "2026-06-11 04:00 CEST": {
+      "sessions": 17,
+      "input": 676977,
+      "output": 41574,
+      "cached": 12213454,
+      "cost": 0.0
+    },
+    "2026-06-11 05:00 CEST": {
+      "sessions": 10,
+      "input": 305850,
+      "output": 30269,
+      "cached": 1447209,
+      "cost": 0.0
+    },
+    "2026-06-11 14:00 CEST": {
+      "sessions": 3,
+      "input": 0,
+      "output": 0,
+      "cached": 0,
+      "cost": 0.0
+    },
+    "2026-06-11 15:00 CEST": {
+      "sessions": 6,
+      "input": 154861,
+      "output": 7335,
+      "cached": 847382,
+      "cost": 0.0
+    },
+    "2026-06-11 16:00 CEST": {
+      "sessions": 2,
+      "input": 10336,
+      "output": 917,
+      "cached": 147963,
+      "cost": 0.0
+    },
+    "2026-06-11 17:00 CEST": {
+      "sessions": 10,
+      "input": 201094,
+      "output": 20747,
+      "cached": 2163884,
+      "cost": 0.0
+    },
+    "2026-06-11 18:00 CEST": {
+      "sessions": 14,
+      "input": 577824,
+      "output": 34697,
+      "cached": 9141120,
+      "cost": 0.0
+    },
+    "2026-06-11 19:00 CEST": {
+      "sessions": 12,
+      "input": 713812,
+      "output": 33522,
+      "cached": 9592468,
+      "cost": 0.0
+    },
+    "2026-06-11 20:00 CEST": {
+      "sessions": 4,
+      "input": 157345,
+      "output": 4926,
+      "cached": 1526093,
+      "cost": 0.0
+    }
+  },
+  "bucket_totals": {
+    "codex": {
+      "sessions": 7,
+      "input": 245592,
+      "output": 28291,
+      "cached": 1156608,
+      "reasoning": 5899,
+      "cost": 0.0
+    },
+    "local": {
+      "sessions": 59,
+      "input": 2440775,
+      "output": 129389,
+      "cached": 32746812,
+      "reasoning": 0,
+      "cost": 0.0
+    },
+    "other": {
+      "sessions": 16,
+      "input": 263600,
+      "output": 21400,
+      "cached": 4725760,
+      "reasoning": 0,
+      "cost": 0.0
+    }
+  }
+}
