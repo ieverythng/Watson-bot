@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kickbacks.ai Revenue Loop — Implementation Plan</title>
+<title>Kickbacks.ai Revenue Loop — Implementation Plan v2</title>
 <style>
 :root {
 --bg: #0d1117;
@@ -37,6 +37,7 @@ th { background: var(--surface); color: var(--heading); }
 .phase { border-left: 3px solid var(--accent); padding-left: 1rem; margin: 1rem 0; }
 .phase h3 { color: var(--accent); }
 .risk { border-left: 3px solid var(--red); padding-left: 1rem; margin: 1rem 0; }
+.bug { border-left: 3px solid var(--orange); padding-left: 1rem; margin: 1rem 0; background: #1a1a0d; border-radius: 4px; padding: 1rem; }
 .metric { display: inline-block; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; margin: 0.5rem; text-align: center; min-width: 140px; }
 .metric .value { font-size: 1.8rem; font-weight: 700; color: var(--green); }
 .metric .label { font-size: 0.8rem; color: var(--text); opacity: 0.7; }
@@ -45,252 +46,251 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 </head>
 <body>
 
-<h1>Kickbacks.ai Revenue Loop</h1>
+<h1>Kickbacks.ai Revenue Loop <span style="font-size:1rem;color:var(--orange)">v2.0</span></h1>
 <p><em>Implementation plan for leveraging kickbacks.ai ad marketplace as an ongoing revenue stream.</em></p>
-<p><strong>Date:</strong> 2026-06-13 &nbsp;|&nbsp; <strong>Status:</strong> Planning Phase &nbsp;|&nbsp; <strong>Prepared by:</strong> WatsonOW-Main + GPT-5.5 Oracle</p>
+<p><strong>Date:</strong> 2026-06-13 &nbsp;|&nbsp; <strong>Status:</strong> Planning + Bug Analysis &nbsp;|&nbsp; <strong>Prepared by:</strong> WatsonOW-Main + GPT-5.5 Oracle</p>
 
 <div class="card">
 <h2 style="margin-top:0">Executive Summary</h2>
-<p>Kickbacks.ai is an ad marketplace that replaces the "thinking..." spinner text in AI coding assistants (Claude Code, Codex) with clickable sponsored ads. Users receive <strong>50% of ad revenue</strong> — credited per impression (≥5 second view) and per click (clicks worth 50× an impression). The platform is very early stage (~128 installs), making this a first-mover opportunity but also carrying startup risk.</p>
-<p><strong>Realistic monthly revenue per active user:</strong> $35–$75 at current top-tier bid rates ($25/1k impressions).</p>
+<p>Kickbacks.ai is an ad marketplace that replaces the "thinking..." spinner text in AI coding assistants (Claude Code, Codex) with clickable sponsored ads. Users receive <strong>50% of ad revenue</strong> — credited per impression (≥5 second view) and per click (clicks worth 50× an impression). The platform is very early stage (~163 stars, ~128 installs), making this a first-mover opportunity but also carrying significant startup risk.</p>
+<p><strong>Realistic monthly revenue per active user:</strong> $50–$100 at current bid rates ($25/1k impressions), reduced by known bugs that cause 20-40% impression loss.</p>
 </div>
 
-<h2>Current Environment Assessment</h2>
+<h2>Platform Architecture</h2>
+
+<div class="card">
+<h3 style="margin-top:0">Revenue Mechanics</h3>
+<table>
+<tr><th>Metric</th><th>Value</th><th>Your Share (50%)</th></tr>
+<tr><td>Top bid rate</td><td>$25.00 / 1k impressions</td><td>$12.50 / 1k imps</td></tr>
+<tr><td>Per impression</td><td>~$0.025</td><td><strong>~$0.0125</strong></td></tr>
+<tr><td>Per click (50×)</td><td>~$1.25</td><td><strong>~$0.625</strong></td></tr>
+<tr><td>Payout threshold</td><td colspan="2">$10 minimum via Stripe Connect Express</td></tr>
+</table>
+<p><em>Source: kickbacks.ai live bid queue, verified 2026-06-13. Top 10 advertisers all bidding $10-$25/block.</em></p>
+</div>
+
+<h2>Supported Surfaces (Verified)</h2>
+
+<table>
+<tr><th>Surface</th><th>Location</th><th>Status</th><th>Notes</th></tr>
+<tr><td>Spinner overlay</td><td>Claude Code VS Code panel</td><td><span class="badge badge-green">Supported</span></td><td>Primary surface — most reliable</td></tr>
+<tr><td>Thinking-shimmer</td><td>Codex VS Code panel</td><td><span class="badge badge-orange">Buggy</span></td><td>"target not found" bug (#55) — ads selected but never rendered</td></tr>
+<tr><td>Status-bar line</td><td>Claude Code terminal CLI</td><td><span class="badge badge-green">Supported</span></td><td>Any Claude Code version</td></tr>
+<tr><td>Spinner verb</td><td>Claude Code terminal CLI</td><td><span class="badge badge-green">Supported</span></td><td>Requires v2.1.143+ (you have 2.1.175 ✓)</td></tr>
+<tr><td>Codex CLI</td><td>Terminal</td><td><span class="badge badge-red">NOT supported</span></td><td>No adapter exists — only Claude Code CLI has terminal adapter</td></tr>
+<tr><td>Cursor IDE</td><td>VS Code fork</td><td><span class="badge badge-orange">Experimental</span></td><td>Docs claim support but no dedicated adapter; untested</td></tr>
+</table>
+
+<h2>Known Bugs & Flakiness (Root Cause Analysis)</h2>
+
+<div class="bug">
+<h3 style="margin-top:0;color:var(--red)">🐛 CRITICAL: Kill Wedge Deadlock (#48)</h3>
+<p><strong>Symptom:</strong> Extension stops showing ads permanently until manual <code>Developer: Reload Window</code>. This is the PRIMARY cause of "flaky" behavior.</p>
+<p><strong>Root cause:</strong> Campaign-scoped kill confirmed → <code>checkKill</code> keeps polling the dead campaignId → serving gate blocks rotation → infinite loop. The extension re-confirms its own kill every 30 seconds forever.</p>
+<p><strong>Workaround:</strong> <code>Developer: Reload Window</code> in VS Code resets the state. Or deploy the watchdog script (see Phase 2).</p>
+<p><strong>Impact:</strong> Can lose 100% of impressions for hours if not caught. Estimated to cause ~20-30% impression loss across all users.</p>
+</div>
+
+<div class="bug">
+<h3 style="margin-top:0;color:var(--orange)">🐛 Codex Adapter "target not found" (#55)</h3>
+<p><strong>Symptom:</strong> Diagnostics show <code>hasAd=true</code>, <code>codexCompatible=true</code>, but ads never render. Dashboard shows $0.00.</p>
+<p><strong>Root cause:</strong> <code>boot.cycle.done {"ok":false,"reason":"target not found"}</code> — the Codex panel DOM structure changed and Kickbacks can't find the injection point.</p>
+<p><strong>Impact:</strong> Codex VS Code surface is effectively broken for affected versions. Focus on Claude Code surfaces until fixed.</p>
+</div>
+
+<div class="bug">
+<h3 style="margin-top:0;color:var(--orange)">🐛 Ads Display but No Credit (#52)</h3>
+<p><strong>Symptom:</strong> Ads render in spinner but impressions are not credited to account. Multiple users affected.</p>
+<p><strong>Root cause:</strong> Unknown — possibly view-tracking timer failing or impression telemetry not reaching backend.</p>
+<p><strong>Impact:</strong> Unpredictable revenue loss. Monitor closely via kickbacks.ai/me ledger.</p>
+</div>
+
+<div class="bug">
+<h3 style="margin-top:0;color:var(--orange)">🐛 Codex CLI Wrapper Breaks on macOS (#53)</h3>
+<p><strong>Symptom:</strong> CRLF shebang + ESM exec of renamed entry point breaks Codex CLI on macOS.</p>
+<p><strong>Impact:</strong> Not applicable to your WSL/Linux environment. Documented for completeness.</p>
+</div>
+
+<h2>Environment Assessment</h2>
 
 <table>
 <tr><th>Component</th><th>Status</th><th>Notes</th></tr>
-<tr><td>Claude Code CLI</td><td><span class="badge badge-orange">v2.1.128</span></td><td>Needs ≥2.1.143 for spinner verb ads in terminal</td></tr>
-<tr><td>Codex CLI</td><td><span class="badge badge-green">v0.128.0</span></td><td>Installed, adapter exists but untested</td></tr>
-<tr><td>VS Code Extension</td><td><span class="badge badge-red">Unknown</span></td><td>Cannot verify on WSL — check Windows host</td></tr>
-<tr><td>Kickbacks Account</td><td><span class="badge badge-red">Not signed in</span></td><td>Redirects to /login — needs Google auth</td></tr>
-<tr><td>Webchat2api Proxy</td><td><span class="badge badge-green">Port 9000</span></td><td>Running for GPT-Oracle delegation</td></tr>
+<tr><td>Claude Code CLI</td><td><span class="badge badge-green">v2.1.175 ✓</span></td><td>Updated — supports spinner verb ads</td></tr>
+<tr><td>Codex CLI</td><td><span class="badge badge-orange">v0.128.0</span></td><td>Installed but NO kickbacks adapter — terminal surface unavailable</td></tr>
+<tr><td>VS Code Extension</td><td><span class="badge badge-red">Not installed</span></td><td>Must install on Windows host VS Code</td></tr>
+<tr><td>Kickbacks Account</td><td><span class="badge badge-red">Not authenticated</span></td><td>Needs Google OAuth sign-in</td></tr>
+<tr><td>WSL2 Environment</td><td><span class="badge badge-blue">Remote-SSH pattern</span></td><td>Extension works on Remote-SSH per docs</td></tr>
 </table>
 
 <h2>Phase 1: Foundation (Week 1)</h2>
 
 <div class="phase">
-<h3>1.1 — Account Setup & Authentication</h3>
+<h3>1.1 — Account Setup & Authentication <span style="font-size:0.8em;color:var(--orange)">BLOCKED: Requires Juan</span></h3>
 <ul>
-<li>Install Kickbacks.ai VS Code extension from marketplace on Windows host</li>
-<li>Sign in via Google auth through the status bar prompt</li>
-<li>Verify account at <a href="https://kickbacks.ai/me" style="color:var(--accent)">kickbacks.ai/me</a></li>
-<li>Configure Stripe Connect for payouts (threshold: $10)</li>
+<li><strong>Install Kickbacks.ai VS Code extension</strong> on Windows host (Ctrl+Shift+X → search "Kickbacks" → Install)</li>
+<li><strong>Sign in:</strong> Click "Kickbacks: Sign in" in status bar → Google OAuth</li>
+<li><strong>Verify account:</strong> Visit <a href="https://kickbacks.ai/me" style="color:var(--accent)">kickbacks.ai/me</a></li>
+<li><strong>Configure Stripe Connect:</strong> Set up payout method ($10 threshold)</li>
 </ul>
 
 <h3>1.2 — Environment Hardening</h3>
 <ul>
-<li><strong>Update Claude Code:</strong> <code>npm update -g @anthropic-ai/claude-code</code> → target ≥2.1.143</li>
-<li><strong>Verify VS Code extension:</strong> Ensure Kickbacks status bar shows balance, not "incompatible"</li>
-<li><strong>Create dedicated workspace:</strong> Separate VS Code profile for revenue sessions to minimize extension conflicts</li>
-<li><strong>Enable verbose logging:</strong> Check <code>Kickbacks: Open Debug Log</code> from status bar menu</li>
+<li><strong>Claude Code CLI:</strong> Already at v2.1.175 ✓ (spinner verbs supported)</li>
+<li><strong>Verify VS Code extension:</strong> Status bar should show <code>Kickbacks ($0.00 today · $0.00)</code></li>
+<li><strong>Enable debug logging:</strong> Status bar → "Open Debug Log" — monitor for kill wedge events</li>
+<li><strong>Create dedicated workspace:</strong> Separate VS Code profile to minimize extension conflicts</li>
 </ul>
 
-<h3>1.3 — Baseline Measurement</h3>
+<h3>1.3 — Watchdog Deployment</h3>
 <ul>
-<li>Run 2–3 typical coding sessions with Kickbacks active</li>
-<li>Record: impressions per session, clicks, earnings shown in status bar</li>
-<li>Identify flakiness patterns (when ads don't render, when impressions aren't credited)</li>
+<li><strong>Deploy watchdog script:</strong> <code>scripts/kickbacks-watchdog.sh</code> (see Phase 2)</li>
+<li><strong>Schedule via cron:</strong> Check every 5 minutes for kill wedge deadlock</li>
+<li><strong>Auto-reload on detection:</strong> Watchdog triggers VS Code reload when stuck</li>
+</ul>
+
+<h3>1.4 — Baseline Measurement</h3>
+<ul>
+<li>Run 2-3 typical coding sessions with Kickbacks active</li>
+<li>Record: impressions per session, clicks, earnings in status bar</li>
+<li>Identify flakiness patterns (kill wedge frequency, Codex failures)</li>
 <li>Document findings in <code>reports/research/kickbacks-baseline.md</code></li>
 </ul>
 </div>
 
-<h2>Phase 2: Optimization (Weeks 2–3)</h2>
+<h2>Phase 2: Optimization & Automation (Weeks 2-3)</h2>
 
 <div class="phase">
-<h3>2.1 — Workflow Engineering</h3>
-<p>Structure coding work to naturally maximize "thinking" spinner events:</p>
-<table>
-<tr><th>Activity</th><th>Impressions/Session</th><th>Strategy</th></tr>
-<tr><td>Multi-file refactors</td><td>High (30–60)</td><td>Batch complex prompts, let AI think</td></tr>
-<tr><td>Documentation generation</td><td>High (20–40)</td><td>Ask for comprehensive docs per module</td></tr>
-<tr><td>Test suite generation</td><td>Medium (15–30)</td><td>Generate full test suites, not individual tests</td></tr>
-<tr><td>Code translation/porting</td><td>High (25–50)</td><td>Convert entire files/modules at once</td></tr>
-<tr><td>Debugging sessions</td><td>Medium (10–25)</td><td>Let AI analyze, don't interrupt prematurely</td></tr>
-<tr><td>Quick fixes (1-3 lines)</td><td>Low (0–5)</td><td>Avoid — minimal thinking time</td></tr>
-</table>
+<h3>2.1 — Watchdog Script</h3>
+<p>The kill wedge deadlock is the #1 revenue killer. The watchdog monitors extension health and auto-recovers:</p>
+<pre><code># scripts/kickbacks-watchdog.sh
+# Runs every 5 minutes via cron
+# Detects kill wedge deadlock and triggers VS Code reload
+# See: reports/recipes/kickbacks-revenue-loop.md for full script</code></pre>
 
-<h3>2.2 — Multi-Surface Strategy</h3>
-<p>Kickbacks supports <strong>4 ad surfaces</strong>. Use all of them:</p>
-<table>
-<tr><th>Surface</th><th>Where</th><th>Action Required</th></tr>
-<tr><td>Spinner overlay</td><td>Claude Code VS Code panel</td><td>✅ Install extension, use Claude Code in VS Code</td></tr>
-<tr><td>Thinking-shimmer</td><td>Codex VS Code panel</td><td>⚠️ Use Codex in VS Code (not CLI)</td></tr>
-<tr><td>Status-bar line</td><td>Claude Code terminal CLI</td><td>✅ Works on any Claude Code version</td></tr>
-<tr><td>Spinner verb</td><td>Claude Code terminal CLI</td><td>⚠️ Requires Claude Code ≥2.1.143</td></tr>
-</table>
-
-<h3>2.3 — Parallel Session Architecture</h3>
-<p>Run multiple sessions simultaneously to multiply impressions:</p>
-<pre>
-┌─────────────────────────────────────────────┐
-│  VS Code Instance 1 (Revenue Workspace)      │
-│  ┌──────────────┐  ┌──────────────┐         │
-│  │ Claude Code   │  │ Codex Panel   │         │
-│  │ Panel         │  │ Panel         │         │
-│  │ Surface:      │  │ Surface:      │         │
-│  │ Spinner       │  │ Shimmer       │         │
-│  └──────────────┘  └──────────────┘         │
-└─────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────┐
-│  Terminal Session (WSL)                       │
-│  ┌──────────────┐                            │
-│  │ claude        │                            │
-│  │ CLI           │                            │
-│  │ Surface:      │                            │
-│  │ Status bar +  │                            │
-│  │ Spinner verb  │                            │
-│  └──────────────┘                            │
-└─────────────────────────────────────────────┘
-</pre>
-
-<h3>2.4 — Revenue Tracking System</h3>
-<p>Set up local tracking to monitor performance independently of kickbacks.ai:</p>
+<h3>2.2 — Workflow Engineering</h3>
 <ul>
-<li>Create <code>reports/expenditure/kickbacks-ledger-YYYY-MM-DD.md</code> for daily logs</li>
-<li>Track: date, session type, duration, impressions, clicks, earnings</li>
-<li>Weekly review: calculate revenue per hour of AI thinking time</li>
-<li>Monthly reconciliation against kickbacks.ai dashboard</li>
+<li><strong>Primary surface:</strong> Claude Code VS Code panel (most reliable)</li>
+<li><strong>Secondary surface:</strong> Claude Code CLI spinner verb + status bar (run in parallel terminal)</li>
+<li><strong>Avoid Codex panel:</strong> Currently broken (#55) — skip until patched</li>
+<li><strong>Cursor IDE:</strong> Test experimentally but don't rely on it</li>
+</ul>
+
+<h3>2.3 — Revenue Maximization Strategy</h3>
+<table>
+<tr><th>Tactic</th><th>Expected Impressions/hr</th><th>Risk</th></tr>
+<tr><td>Natural coding with Claude Code panel open</td><td>15-30</td><td><span class="badge badge-green">None</span></td></tr>
+<tr><td>Parallel CLI sessions (claude --prompt)</td><td>20-40</td><td><span class="badge badge-green">Low</span></td></tr>
+<tr><td>Multi-workspace VS Code instances</td><td>30-60</td><td><span class="badge badge-orange">Medium</span></td></tr>
+<tr><td>Automated prompt scripts</td><td>40-80</td><td><span class="badge badge-red">High — ToS violation risk</span></td></tr>
+</table>
+
+<h3>2.4 — Monitoring & Tracking</h3>
+<ul>
+<li>Daily ledger: <code>reports/expenditure/kickbacks-ledger-YYYY-MM-DD.md</code></li>
+<li>Weekly review: revenue per hour, best-performing prompt types</li>
+<li>Monthly reconciliation with kickbacks.ai/me dashboard</li>
 </ul>
 </div>
 
-<h2>Phase 3: Scale & Automate (Weeks 4+)</h2>
+<h2>Phase 3: Scale & Diversify (Weeks 4+)</h2>
 
 <div class="phase">
-<h3>3.1 — Task Queue System</h3>
-<p>Create a queue of high-impression tasks to work through systematically:</p>
+<h3>3.1 — Platform Growth Monitoring</h3>
 <ul>
-<li>iTrack-Supply-Chain: documentation generation, test suites, refactors</li>
-<li>iChess-Sim: Phase 3+ features, comprehensive testing</li>
-<li>WatsonOW: skill development, recipe authoring, script creation</li>
-<li>General: code translation exercises, learning projects</li>
+<li>Track install count growth (currently ~128)</li>
+<li>Monitor bid queue depth and top bid trends</li>
+<li>Watch for new adapter releases (Cursor, JetBrains)</li>
 </ul>
 
-<h3>3.2 — Cron-Based Monitoring</h3>
-<p>Use Hermes cron jobs to:</p>
-<ul>
-<li>Daily: check kickbacks.ai dashboard for earnings updates</li>
-<li>Weekly: generate performance report with trends</li>
-<li>Monthly: reconcile with Stripe payout, archive ledger</li>
-</ul>
-
-<h3>3.3 — Expansion Opportunities</h3>
+<h3>3.2 — Revenue Projections</h3>
+<div class="card">
 <table>
-<tr><th>Target</th><th>Feasibility</th><th>Notes</th></tr>
-<tr><td>Cursor IDE</td><td><span class="badge badge-orange">Medium</span></td><td>Built on VS Code — extension may work if Cursor exposes same APIs</td></tr>
-<tr><td>Codex CLI standalone</td><td><span class="badge badge-blue">Planned</span></td><td>Adapter exists in repo but untested</td></tr>
-<tr><td>JetBrains IDEs</td><td><span class="badge badge-red">Low</span></td><td>No adapter, would require custom development</td></tr>
-<tr><td>Multiple machines</td><td><span class="badge badge-green">High</span></td><td>Use on Windows host + WSL simultaneously under one account</td></tr>
+<tr><th>Scenario</th><th>Impressions/day</th><th>Revenue/day</th><th>Revenue/month</th></tr>
+<tr><td>Conservative (bugs active)</td><td>100-200</td><td>$1.25-$2.50</td><td><strong>$37-$75</strong></td></tr>
+<tr><td>Baseline (watchdog deployed)</td><td>200-400</td><td>$2.50-$5.00</td><td><strong>$75-$150</strong></td></tr>
+<tr><td>Optimized (bugs fixed, 6hrs/day)</td><td>400-800</td><td>$5.00-$10.00</td><td><strong>$150-$300</strong></td></tr>
 </table>
+<p><em>All figures at current top bid ($25/1k). Revenue scales with advertiser demand.</em></p>
+</div>
+
+<h3>3.3 — Exit Strategy</h3>
+<ul>
+<li>If platform shuts down: all revenue lost, no migration path</li>
+<li>If banned for artificial impressions: account permanently terminated</li>
+<li>Mitigation: treat as supplemental income only; don't depend on it</li>
+</ul>
 </div>
 
 <h2>Risk Assessment</h2>
 
 <div class="risk">
-<h3>🔴 Platform Shutdown Risk (HIGH)</h3>
-<p>128 installs is extremely early. The platform could pivot, shut down, or change terms at any time.</p>
-<p><strong>Mitigation:</strong> Treat as supplemental income only. Maintain local ledger independently. Withdraw payouts promptly.</p>
-
-<h3>🟡 Fraud Detection Risk (MEDIUM)</h3>
-<p>ToS explicitly prohibits automated scripts to generate impressions. Anti-fraud likely monitors: view duration patterns, click frequency, device/IP fingerprinting, and account behavior.</p>
-<p><strong>Mitigation:</strong> Only generate impressions through genuine coding work. No scripted prompts, no headless sessions, no click automation.</p>
-
-<h3>🟡 Revenue Volatility (MEDIUM)</h3>
-<p>Ad bid rates fluctuate. If top advertisers leave, CPM drops and revenue follows.</p>
-<p><strong>Mitigation:</strong> Track revenue per impression to detect rate changes early. Diversify — don't depend solely on this stream.</p>
-
-<h3>🟢 Terms Change Risk (LOW-MEDIUM)</h3>
-<p>Revenue split is "up to 50%" — dynamic and changeable with notice.</p>
-<p><strong>Mitigation:</strong> Monitor terms updates. The 50% split has been stable since launch but could decrease as platform scales.</p>
+<h3 style="margin-top:0;color:var(--red)">Platform Existential Risk</h3>
+<p><strong>128 installs, 163 GitHub stars.</strong> This is a micro-startup. If advertiser demand doesn't grow or the maintainer loses interest, the platform could shut down at any time. All revenue from this source should be treated as bonus income, not reliable income.</p>
 </div>
 
-<h2>Revenue Projections</h2>
-
-<div class="metric">
-<div class="value">$35-75</div>
-<div class="label">Monthly (single user)</div>
-</div>
-<div class="metric">
-<div class="value">$0.0125</div>
-<div class="label">Per impression (user share)</div>
-</div>
-<div class="metric">
-<div class="value">$0.625</div>
-<div class="label">Per click (user share)</div>
-</div>
-<div class="metric">
-<div class="value">~800</div>
-<div class="label">Impressions to $10 payout</div>
+<div class="risk">
+<h3 style="margin-top:0;color:var(--orange)">Bug-Induced Revenue Loss</h3>
+<p>The kill wedge deadlock alone can cause 100% impression loss for hours. Without the watchdog, expect 20-40% of potential impressions lost to bugs. The Codex adapter being broken eliminates one surface entirely.</p>
 </div>
 
-<h3>Sensitivity Analysis</h3>
-<table>
-<tr><th>Scenario</th><th>Bid Rate</th><th>Impressions/Mo</th><th>Revenue</th></tr>
-<tr><td>Optimistic</td><td>$25/1k</td><td>6,000</td><td>$75/mo</td></tr>
-<tr><td>Baseline</td><td>$15/1k</td><td>4,000</td><td>$30/mo</td></tr>
-<tr><td>Pessimistic</td><td>$10/1k</td><td>2,000</td><td>$10/mo</td></tr>
-</table>
+<div class="risk">
+<h3 style="margin-top:0;color:var(--orange)">ToS Violation Risk</h3>
+<p>Kickbacks.ai explicitly warns against artificial impression generation. Automated scripts that simulate coding work solely to generate impressions risk permanent bans. <strong>Only generate impressions as a natural byproduct of real coding work.</strong></p>
+</div>
 
-<h2>Daily Revenue Loop — Operating Procedure</h2>
+<h2>Daily Revenue Loop Diagram</h2>
 
-<pre>
-┌──────────────────────────────────────────────────────────┐
-│                    KICKBACKS REVENUE LOOP                 │
-├──────────────────────────────────────────────────────────┤
-│                                                          │
-│  MORNING (30 min setup)                                  │
-│  ├─ Start VS Code with revenue workspace                 │
-│  ├─ Open Claude Code + Codex panels                      │
-│  ├─ Launch Claude Code CLI in terminal                    │
-│  └─ Verify Kickbacks status bar shows balance             │
-│                                                          │
-│  SESSION 1 (2-3 hours — high-value work)                 │
-│  ├─ Queue complex prompts (refactors, docs, tests)       │
-│  ├─ Let AI think — don't interrupt spinner               │
-│  ├─ Review output → next prompt cycle                    │
-│  └─ Expected: 40-80 impressions                          │
-│                                                          │
-│  SESSION 2 (1-2 hours — CLI batch tasks)                 │
-│  ├─ Run Claude Code CLI for batch operations              │
-│  ├─ Generate test suites, documentation                  │
-│  └─ Expected: 20-40 impressions                          │
-│                                                          │
-│  SESSION 3 (1-2 hours — feature development)             │
-│  ├─ Mix of VS Code panel + CLI                           │
-│  ├─ Focus on multi-file operations                       │
-│  └─ Expected: 30-50 impressions                          │
-│                                                          │
-│  END OF DAY (15 min audit)                               │
-│  ├─ Check Kickbacks status bar for daily earnings         │
-│  ├─ Log session data to reports/expenditure/              │
-│  ├─ Note any flakiness or missed impressions             │
-│  └─ Plan next day's high-impression tasks                │
-│                                                          │
-│  WEEKLY (30 min review)                                  │
-│  ├─ Calculate revenue per hour of AI thinking            │
-│  ├─ Identify best-performing prompt types                │
-│  ├─ Check kickbacks.ai/me for ledger reconciliation      │
-│  └─ Adjust strategy based on trends                      │
-│                                                          │
-└──────────────────────────────────────────────────────────┘
-</pre>
+<div class="card">
+<pre style="font-size:0.85rem"><code>┌─────────────────────────────────────────────────────────────┐
+│                    DAILY REVENUE LOOP                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  MORNING (10 min)                                          │
+│  ├── Install/verify Kickbacks extension                    │
+│  ├── Sign in if needed                                     │
+│  └── Start watchdog cron                                   │
+│                                                             │
+│  WORK SESSIONS (4-6 hours)                                 │
+│  ├── Session A: Claude Code panel (primary surface)       │
+│  │   └── 15-30 impressions/hr during natural coding       │
+│  ├── Session B: Claude Code CLI (secondary surface)       │
+│  │   └── 20-40 impressions/hr via batch prompts           │
+│  └── Watchdog: auto-recover from kill wedge deadlocks      │
+│                                                             │
+│  EVENING (15 min)                                          │
+│  ├── Check status bar balance                              │
+│  ├── Write daily ledger entry                              │
+│  └── Note flakiness incidents for review                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+</div>
 
-<h2>Action Items — Immediate</h2>
+<h2>Open Questions</h2>
 
-<table>
-<tr><th>#</th><th>Action</th><th>Priority</th><th>Where</th></tr>
-<tr><td>1</td><td>Install Kickbacks VS Code extension on Windows host</td><td><span class="badge badge-red">P0</span></td><td>Windows / VS Code</td></tr>
-<tr><td>2</td><td>Sign in via Google auth, verify account at kickbacks.ai/me</td><td><span class="badge badge-red">P0</span></td><td>Browser</td></tr>
-<tr><td>3</td><td>Update Claude Code CLI to ≥2.1.143</td><td><span class="badge badge-orange">P1</span></td><td>WSL terminal</td></tr>
-<tr><td>4</td><td>Run baseline sessions, document flakiness patterns</td><td><span class="badge badge-orange">P1</span></td><td>All surfaces</td></tr>
-<tr><td>5</td><td>Set up expenditure ledger tracking</td><td><span class="badge badge-blue">P2</span></td><td>reports/expenditure/</td></tr>
-<tr><td>6</td><td>Configure cron job for daily earnings check</td><td><span class="badge badge-blue">P2</span></td><td>Hermes cron</td></tr>
-<tr><td>7</td><td>Test Codex CLI adapter compatibility</td><td><span class="badge badge-blue">P3</span></td><td>WSL terminal</td></tr>
-<tr><td>8</td><td>Explore Cursor IDE compatibility</td><td><span class="badge badge-blue">P3</span></td><td>Windows / Cursor</td></tr>
-</table>
+<ul>
+<li><strong>Codex CLI adapter:</strong> Does not exist. Only Claude Code CLI has terminal support. Codex CLI impressions are currently impossible.</li>
+<li><strong>Cursor IDE:</strong> Docs claim support but no dedicated adapter. Needs testing on your Windows setup.</li>
+<li><strong>Stripe Connect:</strong> Payout configuration requires manual setup via kickbacks.ai/me dashboard.</li>
+<li><strong>Claude Code membership:</strong> You don't have Anthropic membership — Claude Code CLI works with Codex OAuth (webchat2api proxy). Verify ads still render without a paid Anthropic plan.</li>
+</ul>
+
+<h2>Action Items for Juan</h2>
+
+<div class="card">
+<ol>
+<li><strong>Install Kickbacks extension</strong> on Windows VS Code (Ctrl+Shift+X → "Kickbacks" → Install)</li>
+<li><strong>Sign in via Google OAuth</strong> from the status bar prompt</li>
+<li><strong>Configure Stripe Connect</strong> at kickbacks.ai/me for payouts</li>
+<li><strong>Test baseline:</strong> Run one coding session, verify ads render, check dashboard credits impressions</li>
+<li><strong>Report back:</strong> Tell me if ads show consistently or if you hit the kill wedge bug</li>
+</ol>
+</div>
 
 <footer>
-<p>Generated 2026-06-13 · WatsonOW-Main · Oracle: GPT-5.5 Thinking · <a href="kickbacks-baseline.md" style="color:var(--accent)">Baseline Report</a> · <a href="../recipes/kickbacks-revenue-loop.md" style="color:var(--accent)">Operating Procedure</a></p>
+<p>Generated 2026-06-13 by WatsonOW-Main + GPT-5.5 Oracle consultation.<br>
+Source data: kickbacks.ai live bid queue, GitHub issues #48/#52/#55, marketplace docs.<br>
+Revenue projections based on current top bid of $25/1k impressions.</p>
 </footer>
 
 </body>
