@@ -238,3 +238,27 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `observation`: CLIProxyAPI rate-limit workaround: extracted ChatGPT web session tokens from Windows Codex CLI (/mnt/c/Users/Admin/.codex/auth.json) to create ~/.cli-proxy-api/chatgpt-web-session.json. Web session auth gives 50+ msg/8h window vs ~10 msg/hr on Codex OAuth. Subagent delegation verified working with gpt-5.5 — no more 'cooling down' errors.
   - `evidence`: memory/2026-06-11.md, ~/.cli-proxy-api/chatgpt-web-session.json, ~/.hermes/skills/mlops/subscription-llm-proxy/SKILL.md
   - `expires`: none
+
+- `id`: O-2026-06-12-01
+  - `timestamp`: 2026-06-12T16:54:53Z
+  - `scope`: infra
+  - `confidence`: 0.97
+  - `observation`: GPT-Oracle (gpt-5 via webchat2api direct API) integrated as expert consultant backend: ask-gpt5.sh wrapper, gpt5-consultant skill, AGENTS.md section added. Oracle recommends replacing webchat2api proxy entirely with direct API calls. Known issue: gpt-5-5-thinking model breaks JSON parser due to thinking blocks.
+  - `evidence`: scripts/ask-gpt5.sh, AGENTS.md GPT-Oracle section, reports/research/oracle-benchmark-comparison.md, commits 941ad2c + ea99cf6
+  - `expires`: none
+
+- `id`: O-2026-06-12-02
+  - `timestamp`: 2026-06-12T16:54:58Z
+  - `scope`: infra
+  - `confidence`: 0.98
+  - `observation`: Local inference backend migrated from Ollama to llama.cpp. Ollama references removed from architecture docs and CLIProxyAPI status. llama.cpp is now the sole local inference backend with per-channel model selection via /model command.
+  - `evidence`: reports/research/watson-architecture.md, reports/research/watson-architecture.html, reports/research/cliproxyapi-status-jun2026.html, commits 1af3b09 + 761994b
+  - `expires`: none
+
+- `id`: O-2026-06-13-01
+  - `timestamp`: 2026-06-13T03:11:12Z
+  - `scope`: infra
+  - `confidence`: 0.95
+  - `observation`: Kickbacks.ai revenue loop researched and planned: ad marketplace for AI coding assistant wait states. Revenue model $35-75/user/month at top-tier bids. Kill wedge deadlock (#48) is primary flakiness cause — watchdog script created (scripts/kickbacks-watchdog.sh). GPT-Oracle offload saves ~69K front-model tokens per consultation; gpt5-consultant skill updated with Oracle compression strategy.
+  - `evidence`: reports/research/kickbacks-revenue-loop.html, reports/recipes/kickbacks-revenue-loop.md, scripts/kickbacks-watchdog.sh, reports/research/token-efficiency-report.md, memory/2026-06-13.md
+  - `expires`: none
