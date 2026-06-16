@@ -55,22 +55,6 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `evidence`: `reports/recipes/01-om-loop.md`, `reports/recipes/02-delegation-contracts.md`, `AGENTS.md`, `TOOLS.md`, `skills/memory-observer/SKILL.md`, `skills/memory-reflector/SKILL.md`, `MEMORY.md`
   - `expires`: none
 
-- `id`: O-2026-05-21-01
-  - `timestamp`: 2026-05-21T03:55:31Z
-  - `scope`: process
-  - `confidence`: 0.97
-  - `observation`: OM sweep cycle is executing but OBSERVATIONS.md and REFLECTIONS.md have not been updated since early April and mid-March respectively; the OM writing loop has gone dormant despite active repo work including Hermes migration, Codex harness integration, and expenditure tracking infrastructure.
-  - `evidence`: OBSERVATIONS.md (last: O-2026-04-01-01), REFLECTIONS.md (last: R-2026-03-17-01), memory/2026-05-07.md, reports/expenditure/ledger-2026-05-21.md
-  - `expires`: none
-
-- `id`: O-2026-05-30-01
-  - `timestamp`: 2026-05-30T15:46:49Z
-  - `scope`: process
-  - `confidence`: 0.96
-  - `observation`: OM writing loop dormancy confirmed persistent: 9+ days since last OBSERVATIONS.md update and 7+ weeks since last REFLECTIONS.md entry, despite sustained daily activity (21 sessions on 2026-05-30 alone). The OM sweep cron jobs execute but do not produce new observations or reflections — the loop captures events to daily memory but does not flush to durable lanes.
-  - `evidence`: memory/2026-05-30.md, OBSERVATIONS.md (last: O-2026-05-21-01), REFLECTIONS.md (last: R-2026-03-17-01), reports/expenditure/ledger-2026-05-30.md
-  - `expires`: none
-
 - `id`: O-2026-06-03-01
   - `timestamp`: 2026-06-03T14:22:16Z
   - `scope`: infra
@@ -87,28 +71,12 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `evidence`: commit 35f326d, reports/recipes/ zerotier bootstrap docs
   - `expires`: none
 
-- `id`: O-2026-06-03-03
-  - `timestamp`: 2026-06-03T14:22:26Z
-  - `scope`: process
-  - `confidence`: 0.80
-  - `observation`: OM writing loop dormancy persists: 4 days since last OBSERVATIONS.md update, 7+ weeks since last REFLECTIONS.md entry. Sweep cron jobs execute but do not produce new durable observations — the loop captures events to daily memory without flushing to durable lanes.
-  - `evidence`: OBSERVATIONS.md (last pre-today: O-2026-05-30-01), REFLECTIONS.md (last: R-2026-03-17-01), memory/2026-05-30.md
-  - `expires`: none
-
 - `id`: O-2026-06-08-01
   - `timestamp`: 2026-06-08T19:47:17Z
   - `scope`: infra
   - `confidence`: 0.95
   - `observation`: Post-subagent token usage report script deployed: queries Hermes state.db for child session token counts, shows per-model breakdown with cost, and displays 5hr/weekly budget percentages. Callable after every delegate_task to track ChatGPT Plus consumption.
   - `evidence`: commit 1923b9f, scripts/subagent_token_report.py, scripts/subagent_token_report.sh
-  - `expires`: none
-
-- `id`: O-2026-06-08-02
-  - `timestamp`: 2026-06-08T19:47:23Z
-  - `scope`: process
-  - `confidence`: 0.96
-  - `observation`: OM writing loop dormancy persists: 5 days since last OBSERVATIONS.md update and 10+ weeks since last REFLECTIONS.md entry. Sweep cron jobs execute but do not produce new durable observations — the loop captures events to daily memory without flushing to durable lanes.
-  - `evidence`: OBSERVATIONS.md (last pre-today: O-2026-06-03-03), REFLECTIONS.md (last: R-2026-03-17-01), memory/2026-06-03.md
   - `expires`: none
 
 - `id`: O-2026-06-11-01
@@ -165,4 +133,12 @@ Each observation should be compact, evidence-backed, and optionally expirable.
   - `confidence`: 0.97
   - `observation`: Speculative decoding infrastructure deployed: BeeLlama llama-server.exe with DFlash draft model (Qwen3.6-27B-DFlash-IQ4_XS, 892MB) and Lucebox Q4_K_M draft (1GB). Startup scripts created for both Windows (.ps1) and WSL interop (.sh). LiteLLM config updated with speculative model alias; zerotier-llm-proxy skill extended. Main model: Qwen3.6-27B-Q3_K_M.gguf (13GB).
   - `evidence`: memory/2026-06-15.md, scripts/start-speculative-server.ps1, scripts/start-speculative-server.sh, reports/recipes/speculative-decoding-setup.md, reports/research/litellm-config-speculative.yaml
+  - `expires`: none
+
+- `id`: O-2026-06-16-01
+  - `timestamp`: 2026-06-16T03:00:00Z
+  - `scope`: project
+  - `confidence`: 0.95
+  - `observation`: Thesis Codex project researched: market analysis of academic writing tools (Paperpal, Trinka, Writefull, SciSpace, Jenni AI, Yomu AI) identified a gap — no dominant "Copilot for thesis writing" exists. Architecture designed: chat interface → planner agent → editor agent → latexmk verifier → RAG layer over thesis structure. MVP stack: Python/FastAPI, local vector DB, llama.cpp + GPT-5.4 delegation, VS Code extension or web UI.
+  - `evidence`: thesis-writing-tools.md, reports/research/thesis-writing-tools.md, reports/research/thesis-writing-tools.html, memory/2026-06-16.md
   - `expires`: none
