@@ -1,0 +1,4 @@
+{"ctx":80000,"target":2400,"status":"ok","harness_report":"/home/juanbeck/Watson/reports/benchmarks/watson-stack-harness-ctx80000-20260622_034348.md"}
+{"ctx":96000,"target":2880,"status":"ok","harness_report":"/home/juanbeck/Watson/reports/benchmarks/watson-stack-harness-ctx96000-20260622_034800.md"}
+{"ctx":112000,"target":3360,"status":"ok","harness_report":"/home/juanbeck/Watson/reports/benchmarks/watson-stack-harness-ctx112000-20260622_035218.md"}
+{"ctx":128000,"target":3840,"status":"ok","harness_report":"/home/juanbeck/Watson/reports/benchmarks/watson-stack-harness-ctx128000-20260622_035622.md"}

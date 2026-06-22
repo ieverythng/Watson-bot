@@ -1,0 +1,116 @@
+[01:49:18 UTC] ╔══════════════════════════════════════════════════════════╗
+[01:49:18 UTC] ║              LAZARUS — INFERENCE RESURRECTION           ║
+[01:49:18 UTC] ╚══════════════════════════════════════════════════════════╝
+[01:49:18 UTC] Mode=stable DryRun=0 SkipKill=0
+[01:49:18 UTC] llama.cpp target: http://172.24.16.1:8080/v1
+[01:49:18 UTC] LiteLLM target : http://127.0.0.1:4000/v1
+[01:49:18 UTC] Server exe     : C:\Users\Admin\PROJECTS\beellama-server\llama-server.exe
+[01:49:18 UTC] Main model     : D:\MODELS\Qwen3.6-27B-Q3_K_M.gguf
+[01:49:18 UTC] 
+[01:49:18 UTC] ── Phase 1: WSL proxy cleanup ──
+[01:49:18 UTC]   ℹ No LiteLLM process found
+[01:49:18 UTC] 
+[01:49:18 UTC] ── Phase 2: Windows llama.cpp launch ──
+[01:49:18 UTC]   ℹ Using WSL interop powershell.exe
+started C:\Users\Admin\PROJECTS\beellama-server\llama-server.exe with stable mode
+[01:49:23 UTC]   ⏳ llama.cpp is still loading (1/90)
+[01:49:25 UTC]   ⏳ llama.cpp is still loading (2/90)
+[01:49:27 UTC]   ⏳ llama.cpp is still loading (3/90)
+[01:49:29 UTC]   ⏳ llama.cpp is still loading (4/90)
+[01:49:31 UTC]   ⏳ llama.cpp is still loading (5/90)
+[01:49:33 UTC]   ⏳ llama.cpp is still loading (6/90)
+[01:49:35 UTC]   ⏳ llama.cpp is still loading (7/90)
+[01:49:37 UTC]   ⏳ llama.cpp is still loading (8/90)
+[01:49:39 UTC]   ⏳ llama.cpp is still loading (9/90)
+[01:49:41 UTC]   ⏳ llama.cpp is still loading (10/90)
+[01:49:43 UTC]   ⏳ llama.cpp is still loading (11/90)
+[01:49:45 UTC]   ⏳ llama.cpp is still loading (12/90)
+[01:49:47 UTC]   ⏳ llama.cpp is still loading (13/90)
+[01:49:49 UTC]   ⏳ llama.cpp is still loading (14/90)
+[01:49:51 UTC]   ⏳ llama.cpp is still loading (15/90)
+[01:49:53 UTC]   ⏳ llama.cpp is still loading (16/90)
+[01:49:55 UTC]   ⏳ llama.cpp is still loading (17/90)
+[01:49:57 UTC]   ⏳ llama.cpp is still loading (18/90)
+[01:49:59 UTC]   ⏳ llama.cpp is still loading (19/90)
+[01:50:01 UTC]   ⏳ llama.cpp is still loading (20/90)
+[01:50:03 UTC]   ⏳ llama.cpp is still loading (21/90)
+[01:50:05 UTC]   ⏳ llama.cpp is still loading (22/90)
+[01:50:07 UTC]   ⏳ llama.cpp is still loading (23/90)
+[01:50:09 UTC]   ⏳ llama.cpp is still loading (24/90)
+[01:50:11 UTC]   ⏳ llama.cpp is still loading (25/90)
+[01:50:13 UTC]   ⏳ llama.cpp is still loading (26/90)
+[01:50:15 UTC]   ⏳ llama.cpp is still loading (27/90)
+[01:50:17 UTC]   ⏳ llama.cpp is still loading (28/90)
+[01:50:19 UTC]   ⏳ llama.cpp is still loading (29/90)
+[01:50:21 UTC]   ⏳ llama.cpp is still loading (30/90)
+[01:50:23 UTC]   ⏳ llama.cpp is still loading (31/90)
+[01:50:25 UTC]   ⏳ llama.cpp is still loading (32/90)
+[01:50:27 UTC]   ⏳ llama.cpp is still loading (33/90)
+[01:50:29 UTC]   ⏳ llama.cpp is still loading (34/90)
+[01:50:31 UTC]   ⏳ llama.cpp is still loading (35/90)
+[01:50:33 UTC]   ⏳ llama.cpp is still loading (36/90)
+[01:50:35 UTC]   ⏳ llama.cpp is still loading (37/90)
+[01:50:37 UTC]   ⏳ llama.cpp is still loading (38/90)
+[01:50:39 UTC]   ⏳ llama.cpp is still loading (39/90)
+[01:50:41 UTC]   ⏳ llama.cpp is still loading (40/90)
+[01:50:43 UTC]   ⏳ llama.cpp is still loading (41/90)
+[01:50:45 UTC]   ⏳ llama.cpp is still loading (42/90)
+[01:50:47 UTC]   ⏳ llama.cpp is still loading (43/90)
+[01:50:49 UTC]   ⏳ llama.cpp is still loading (44/90)
+[01:50:51 UTC]   ⏳ llama.cpp is still loading (45/90)
+[01:50:53 UTC]   ⏳ llama.cpp is still loading (46/90)
+[01:50:55 UTC]   ⏳ llama.cpp is still loading (47/90)
+[01:50:57 UTC]   ⏳ llama.cpp is still loading (48/90)
+[01:50:59 UTC]   ⏳ llama.cpp is still loading (49/90)
+[01:51:01 UTC]   ⏳ llama.cpp is still loading (50/90)
+[01:51:03 UTC]   ⏳ llama.cpp is still loading (51/90)
+[01:51:05 UTC]   ⏳ llama.cpp is still loading (52/90)
+[01:51:07 UTC]   ⏳ llama.cpp is still loading (53/90)
+[01:51:09 UTC]   ⏳ llama.cpp is still loading (54/90)
+[01:51:11 UTC]   ⏳ llama.cpp is still loading (55/90)
+[01:51:13 UTC]   ⏳ llama.cpp is still loading (56/90)
+[01:51:15 UTC]   ⏳ llama.cpp is still loading (57/90)
+[01:51:17 UTC]   ⏳ llama.cpp is still loading (58/90)
+[01:51:19 UTC]   ⏳ llama.cpp is still loading (59/90)
+[01:51:22 UTC]   ⏳ llama.cpp is still loading (60/90)
+[01:51:24 UTC]   ⏳ llama.cpp is still loading (61/90)
+[01:51:27 UTC]   ⏳ llama.cpp is still loading (62/90)
+[01:51:30 UTC]   ⏳ llama.cpp is still loading (63/90)
+[01:51:32 UTC]   ⏳ llama.cpp is still loading (64/90)
+[01:51:34 UTC]   ⏳ llama.cpp is still loading (65/90)
+[01:51:36 UTC]   ⏳ llama.cpp is still loading (66/90)
+[01:51:38 UTC]   ⏳ llama.cpp is still loading (67/90)
+[01:51:40 UTC]   ⏳ llama.cpp is still loading (68/90)
+[01:51:42 UTC]   ⏳ llama.cpp is still loading (69/90)
+[01:51:44 UTC]   ⏳ llama.cpp is still loading (70/90)
+[01:51:46 UTC]   ⏳ llama.cpp is still loading (71/90)
+[01:51:48 UTC]   ⏳ llama.cpp is still loading (72/90)
+[01:51:50 UTC]   ⏳ llama.cpp is still loading (73/90)
+[01:51:52 UTC]   ⏳ llama.cpp is still loading (74/90)
+[01:51:54 UTC]   ⏳ llama.cpp is still loading (75/90)
+[01:51:56 UTC]   ⏳ llama.cpp is still loading (76/90)
+[01:51:58 UTC]   ⏳ llama.cpp is still loading (77/90)
+[01:52:00 UTC]   ⏳ llama.cpp is still loading (78/90)
+[01:52:02 UTC]   ⏳ llama.cpp is still loading (79/90)
+[01:52:04 UTC]   ⏳ llama.cpp is still loading (80/90)
+[01:52:06 UTC]   ⏳ llama.cpp is still loading (81/90)
+[01:52:08 UTC]   ⏳ llama.cpp is still loading (82/90)
+[01:52:10 UTC]   ⏳ llama.cpp is still loading (83/90)
+[01:52:12 UTC]   ⏳ llama.cpp is still loading (84/90)
+[01:52:14 UTC]   ⏳ llama.cpp is still loading (85/90)
+[01:52:16 UTC]   ✓ llama.cpp is reachable: http://172.24.16.1:8080/v1/models
+[01:52:16 UTC] 
+[01:52:16 UTC] ── Phase 3: LiteLLM config ──
+[01:52:16 UTC]   ✓ LiteLLM config ready: /home/juanbeck/.hermes/litellm/config.yaml
+[01:52:16 UTC] 
+[01:52:16 UTC] ── Phase 4: LiteLLM launch ──
+[01:52:16 UTC]   ⚠ litellm command not found in WSL; skipping local LiteLLM launch
+[01:52:16 UTC]     Direct llama.cpp endpoint is still verified. Install/restore LiteLLM to enable proxy recovery.
+[01:52:16 UTC] 
+[01:52:16 UTC] ── Phase 5: End-to-end verification ──
+[01:52:18 UTC]   ✓ Direct llama.cpp verified with a chat completion
+[01:52:18 UTC] 
+[01:52:18 UTC] ╔══════════════════════════════════════════════════════════╗
+[01:52:18 UTC] ║           LAZARUS COMPLETE — STACK IS BACK ONLINE       ║
+[01:52:18 UTC] ╚══════════════════════════════════════════════════════════╝
+[01:52:18 UTC] Log saved to: /home/juanbeck/Watson/memory/lazarus-2026-06-22_034918.log

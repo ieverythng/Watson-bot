@@ -1,0 +1,145 @@
+{
+  "label": "baseline-65k-reasoning-off",
+  "timestamp": "2026-06-22T01:37:12.248703+00:00",
+  "base_url": "http://172.24.16.1:8080/v1",
+  "model": "qwen36-turbo-hermes",
+  "contexts": [
+    0,
+    2048,
+    8192
+  ],
+  "environment": {
+    "git_head": "fe08e55",
+    "git_branch": "feat/Foundations_OM_Skills"
+  },
+  "results": [
+    {
+      "kind": "endpoint",
+      "name": "models",
+      "url": "http://172.24.16.1:8080/v1/models",
+      "status": 200,
+      "elapsed_s": 0.003,
+      "ok": true,
+      "data_preview": "{'models': [{'name': 'Qwen3.6-27B-Q3_K_M.gguf', 'model': 'Qwen3.6-27B-Q3_K_M.gguf', 'modified_at': '', 'size': '', 'digest': '', 'type': 'model', 'description': '', 'tags': [''], 'capabilities': ['completion'], 'parameters': '', 'details': {'parent_model': '', 'format': 'gguf', 'family': '', 'families': [''], 'parameter_size': '', 'quantization_level': ''}}], 'object': 'list', 'data': [{'id': 'Qwen3.6-27B-Q3_K_M.gguf', 'aliases': [], 'tags': [], 'object': 'model', 'created': 1782092232, 'owned_by': 'llamacpp', 'meta': {'vocab_type': 2, 'n_vocab': 248320, 'n_ctx': 65536, 'n_ctx_train': 262144, 'n_embd': 5120, 'n_params': 26895998464, 'size': 13575223296}}]}"
+    },
+    {
+      "kind": "endpoint",
+      "name": "headroom",
+      "url": "http://172.24.16.1:8787/health",
+      "status": 200,
+      "elapsed_s": 0.2,
+      "ok": true,
+      "data_preview": "{'service': 'headroom-proxy', 'status': 'healthy', 'ready': True, 'version': '0.26.0', 'timestamp': '2026-06-22T01:37:12.464670Z', 'uptime_seconds': 38162.414, 'checks': {'startup': {'enabled': True, 'ready': True, 'status': 'healthy', 'error': None}, 'http_client': {'enabled': True, 'ready': True, 'status': 'healthy'}, 'cache': {'enabled': True, 'ready': True, 'status': 'healthy'}, 'rate_limiter': {'enabled': True, 'ready': True, 'status': 'healthy'}, 'memory': {'enabled': True, 'ready': True, 'status': 'healthy', 'backend': 'local', 'initialized': True, 'native_tool': False, 'bridge_enabled': False}, 'upstream': {'enabled': True, 'ready': True, 'status': 'healthy', 'url': 'https://api.anthropic.com', 'error': None}}, 'runtime': {'anthropic_pre_upstream': {'enabled': True, 'resolved_concurrency': 8, 'source': 'auto', 'acquire_timeout_seconds': 15.0, 'compression_timeout_seconds': 30.0, 'memory_context_timeout_seconds': 2.0, 'codex_ws_gated': False}, 'compression_executor': {'max_worke"
+    },
+    {
+      "status": 200,
+      "elapsed_s": 5.777,
+      "raw_ok": true,
+      "content": "{\n  \"alpha_seen\": false,\n  \"omega_seen\": false,\n  \"summary\": \"No context markers were present in the input.\"\n}",
+      "content_preview": "{\n  \"alpha_seen\": false,\n  \"omega_seen\": false,\n  \"summary\": \"No context markers were present in the input.\"\n}",
+      "usage": {
+        "completion_tokens": 35,
+        "prompt_tokens": 66,
+        "total_tokens": 101,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "visible_tokens": 35
+        }
+      },
+      "completion_tokens_est": 35,
+      "completion_tok_s_est": 6.058,
+      "kind": "context",
+      "target_context_tokens": 0,
+      "prompt_chars": 199,
+      "marker_alpha_reported": false,
+      "marker_omega_reported": false
+    },
+    {
+      "status": 200,
+      "elapsed_s": 40.977,
+      "raw_ok": true,
+      "content": "{\n  \"alpha_seen\": true,\n  \"omega_seen\": true,\n  \"summary\": \"Both CTX_MARKER_ALPHA and CTX_MARKER_OMEGA were detected in the input context.\"\n}",
+      "content_preview": "{\n  \"alpha_seen\": true,\n  \"omega_seen\": true,\n  \"summary\": \"Both CTX_MARKER_ALPHA and CTX_MARKER_OMEGA were detected in the input context.\"\n}",
+      "usage": {
+        "completion_tokens": 44,
+        "prompt_tokens": 2118,
+        "total_tokens": 2162,
+        "prompt_tokens_details": {
+          "cached_tokens": 12
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "visible_tokens": 44
+        }
+      },
+      "completion_tokens_est": 44,
+      "completion_tok_s_est": 1.074,
+      "kind": "context",
+      "target_context_tokens": 2048,
+      "prompt_chars": 8508,
+      "marker_alpha_reported": true,
+      "marker_omega_reported": true
+    },
+    {
+      "status": 200,
+      "elapsed_s": 162.279,
+      "raw_ok": true,
+      "content": "{\n  \"alpha_seen\": true,\n  \"omega_seen\": true,\n  \"summary\": \"Both CTX_MARKER_ALPHA and CTX_MARKER_OMEGA were detected in the input context.\"\n}",
+      "content_preview": "{\n  \"alpha_seen\": true,\n  \"omega_seen\": true,\n  \"summary\": \"Both CTX_MARKER_ALPHA and CTX_MARKER_OMEGA were detected in the input context.\"\n}",
+      "usage": {
+        "completion_tokens": 44,
+        "prompt_tokens": 8187,
+        "total_tokens": 8231,
+        "prompt_tokens_details": {
+          "cached_tokens": 12
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "visible_tokens": 44
+        }
+      },
+      "completion_tokens_est": 44,
+      "completion_tok_s_est": 0.271,
+      "kind": "context",
+      "target_context_tokens": 8192,
+      "prompt_chars": 33073,
+      "marker_alpha_reported": true,
+      "marker_omega_reported": true
+    },
+    {
+      "status": 200,
+      "elapsed_s": 9.075,
+      "raw_ok": true,
+      "content": "{\"tool\": \"read_file\", \"arguments\": {\"path\": \"reports/research/local-model-inventory.md\"}, \"reason\": \"The request asks to inspect a local file, which is best handled by the read_file tool.\"}",
+      "content_preview": "{\"tool\": \"read_file\", \"arguments\": {\"path\": \"reports/research/local-model-inventory.md\"}, \"reason\": \"The request asks to inspect a local file, which is best handled by the read_file tool.\"}",
+      "usage": {
+        "completion_tokens": 48,
+        "prompt_tokens": 114,
+        "total_tokens": 162,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "visible_tokens": 48
+        }
+      },
+      "completion_tokens_est": 48,
+      "completion_tok_s_est": 5.289,
+      "kind": "tool_fidelity",
+      "name": "select_read_file",
+      "json_valid": true,
+      "tool_correct": true,
+      "parsed": {
+        "tool": "read_file",
+        "arguments": {
+          "path": "reports/research/local-model-inventory.md"
+        },
+        "reason": "The request asks to inspect a local file, which is best handled by the read_file tool."
+      }
+    }
+  ]
+}
