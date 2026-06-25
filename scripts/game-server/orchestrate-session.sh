@@ -200,18 +200,10 @@ launch_lightweight() {
     WINDOWS_MODEL='D:\\MODELS\\LFM2-8B-A1B-Q4_K_M.gguf'
     WINDOWS_LAUNCHER='C:\\Users\\Admin\\PROJECTS\\llama-cpp-server\\scripts\\start_turbo_hermes.ps1'
 
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
-        \$ErrorActionPreference = 'Stop';
-        \$launcher = '$WINDOWS_LAUNCHER';
-        if (-not (Test-Path \$launcher)) { throw \"Launcher not found: \$launcher\" }
-        & \$launcher `
-            -Port 8081 `
-            -ContextSize 8192 `
-            -Profile hermes-qwen36-64k `
-            -ModelPath '$WINDOWS_MODEL' `
-            -BatchSize 1024 `
-            -UBatchSize 256
-    " > "$LOG_DIR/lightweight-llama.log" 2>&1 &
+    # Keep this PowerShell command on one line. Backticks inside a Bash
+    # double-quoted string are command substitution, so PowerShell line
+    # continuations become Bash commands like '-Port: command not found'.
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "\$ErrorActionPreference = 'Stop'; \$launcher = '$WINDOWS_LAUNCHER'; if (-not (Test-Path \$launcher)) { throw \"Launcher not found: \$launcher\" }; & \$launcher -Port 8081 -ContextSize 8192 -Profile hermes-qwen36-64k -ModelPath '$WINDOWS_MODEL' -BatchSize 1024 -UBatchSize 256" > "$LOG_DIR/lightweight-llama.log" 2>&1 &
     LIGHTWEIGHT_LLAMA_PID=$!
     log "  Windows launcher PID: $LIGHTWEIGHT_LLAMA_PID"
 
