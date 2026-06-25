@@ -325,8 +325,8 @@ log "Polling every 5s. Model tier adapts to available VRAM."
 log ""
 
 # Thresholds (tunable)
-VRAM_HEADROOM_LIGHTWEIGHT=4096  # MB needed free to load lightweight model
-VRAM_HEADROOM_FULL=8192         # MB needed free to load full 27B model
+VRAM_HEADROOM_LIGHTWEIGHT=10240  # MB free needed to load LFM2-8B (~5-6GB VRAM)
+VRAM_HEADROOM_FULL=13312          # MB free needed for 27B (~13GB VRAM, <0.5GB other usage)
 
 TICK=0
 GAME_EXITED=0
