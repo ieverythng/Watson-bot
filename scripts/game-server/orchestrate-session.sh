@@ -224,6 +224,8 @@ launch_lightweight() {
         kill_llama_windows
         LIGHTWEIGHT_LLAMA_PID=""
         CURRENT_TIER="remote"
+        NO_LIGHTWEIGHT=1
+        log "  ℹ Disabling lightweight tier for the rest of this session"
         return 1
     }
 
