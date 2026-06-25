@@ -77,7 +77,12 @@ import json
 with open('$CONFIG') as f:
     c = json.load(f)
 g = c['games']['$GAME_NAME']
-print(g.get('$1', '$2'))
+v = g.get('$1', '$2')
+# Normalize JSON null / Python None / empty-ish values so bash does not treat
+# them as real launch targets (bug: steam_appid null became string 'None').
+if v is None or v == 'None' or v == 'null':
+    v = '$2'
+print(v)
 " 2>/dev/null || echo "$2"
 }
 
@@ -184,34 +189,34 @@ launch_lightweight() {
         return 1
     fi
 
-    LLAMA_BIN_DIR="/home/juanbeck/.hermes/llama-bin-lightweight"
+    # Launch through the existing Windows llama.cpp launcher. Do not try to run
+    # a Windows .exe copied into a WSL path: WSL interop works best when the
+    # launcher owns the Windows process tree.
+    WINDOWS_MODEL='D:\\MODELS\\LFM2-8B-A1B-Q4_K_M.gguf'
+    WINDOWS_LAUNCHER='C:\\Users\\Admin\\PROJECTS\\llama-cpp-server\\scripts\\start_turbo_hermes.ps1'
 
-    # Prepare binaries
     powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
-        \$source = 'C:\\Users\\Admin\\PROJECTS\\llama-cpp-turboquant\\build-cuda-faall\\bin';
-        \$target = '$LLAMA_BIN_DIR';
-        New-Item -ItemType Directory -Path \$target -Force | Out-Null;
-        Copy-Item -Path (Join-Path \$source '*.dll'), (Join-Path \$source 'llama-server.exe') -Destination \$target -Force -ErrorAction SilentlyContinue;
-        Write-Host '✓ Binaries prepared'
-    " 2>&1 | sed 's/^/  /' || true
-
-    # Launch on port 8081
-    nohup "$LLAMA_BIN_DIR/llama-server.exe" \
-        --model "$LIGHTWEIGHT_MODEL" \
-        --port 8081 \
-        --ctx-size 8192 \
-        --gpu-layers 999 \
-        --threads 8 \
-        --ubatch-size 512 \
-        --batch-size 2048 \
-        --alias "$LIGHTWEIGHT_ALIAS" \
-        > "$LOG_DIR/lightweight-llama.log" 2>&1 &
+        \$ErrorActionPreference = 'Stop';
+        \$launcher = '$WINDOWS_LAUNCHER';
+        if (-not (Test-Path \$launcher)) { throw \"Launcher not found: \$launcher\" }
+        & \$launcher `
+            -Port 8081 `
+            -ContextSize 8192 `
+            -Profile hermes-qwen36-64k `
+            -ModelPath '$WINDOWS_MODEL' `
+            -BatchSize 1024 `
+            -UBatchSize 256
+    " > "$LOG_DIR/lightweight-llama.log" 2>&1 &
     LIGHTWEIGHT_LLAMA_PID=$!
-    log "  llama-server PID: $LIGHTWEIGHT_LLAMA_PID"
+    log "  Windows launcher PID: $LIGHTWEIGHT_LLAMA_PID"
 
     wait_http "http://172.24.16.1:8081/v1/models" "lightweight llama.cpp" 30 2 || {
-        log "  ⚠ Lightweight model failed — falling back to remote"
+        log "  ⚠ Lightweight model failed or is unreachable from WSL — falling back to remote"
         kill "$LIGHTWEIGHT_LLAMA_PID" 2>/dev/null || true
+        # If the Windows launcher succeeded but WSL cannot reach the port
+        # (usually Windows firewall), the real Windows llama-server may still
+        # be alive and consuming VRAM. Kill it before falling back.
+        kill_llama_windows
         LIGHTWEIGHT_LLAMA_PID=""
         CURRENT_TIER="remote"
         return 1
@@ -313,7 +318,35 @@ fi
 
 sleep 3
 VRAM_GAME=$(get_vram_mb)
-log "VRAM with game running: ${VRAM_GAME} MB"
+log "VRAM after launch attempt: ${VRAM_GAME} MB"
+
+# Confirm the game process actually appeared before entering the monitor loop.
+# Without this, a bad launch path can look like an immediate clean exit and
+# Lazarus will revive the full stack while the user thinks the game is starting.
+if [[ -n "$GAME_PROCESS" ]]; then
+    log "  Waiting for game process to appear: $GAME_PROCESS"
+    GAME_STARTED=0
+    for ((i=1; i<=24; i++)); do
+        WIN_CHECK=$(powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
+            \$p = Get-Process -Name '$GAME_PROCESS' -ErrorAction SilentlyContinue;
+            if (\$p) { 'RUNNING' } else { 'MISSING' }
+        " 2>/dev/null | tr -d '\r')
+        if [[ "$WIN_CHECK" == *"RUNNING"* ]]; then
+            GAME_STARTED=1
+            log "  ✓ Game process detected ($GAME_PROCESS)"
+            break
+        fi
+        sleep 5
+    done
+    if [[ "$GAME_STARTED" -ne 1 ]]; then
+        log "  ✗ Game process did not appear after 120s. Launch likely failed."
+        if [[ "$NO_RESUME" -eq 0 && -f "$LAZARUS" ]]; then
+            log "  Restoring full inference stack because launch failed..."
+            bash "$LAZARUS" --skip-kill
+        fi
+        exit 1
+    fi
+fi
 log ""
 
 # ═══════════════════════════════════════════════════════════════════
@@ -351,7 +384,7 @@ while [[ "$GAME_EXITED" -eq 0 ]]; do
     fi
 
     # Report every 12 ticks (~1 minute)
-    if [[ "$TICK" % 12 -eq 0 ]]; then
+    if (( TICK % 12 == 0 )); then
         VRAM_NOW=$(get_vram_mb)
         VRAM_FREE=$(( VRAM_TOTAL - VRAM_NOW ))
         log "  ⏳ Tick $TICK | Game running | Tier: $CURRENT_TIER | VRAM: ${VRAM_NOW}/${VRAM_TOTAL} MB (${VRAM_FREE} free)"
@@ -386,7 +419,12 @@ if [[ -n "$LIGHTWEIGHT_LLAMA_PID" ]]; then
     kill -9 "$LIGHTWEIGHT_LLAMA_PID" 2>/dev/null || true
     kill -9 "${LIGHTWEIGHT_LITELLM_PID:-}" 2>/dev/null || true
 
-    # Kill stragglers on port 8081
+    # The lightweight model is launched by Windows PowerShell, so the real
+    # llama-server process may not be a WSL child PID. Kill the Windows
+    # llama-server explicitly before Lazarus restores the full stack.
+    kill_llama_windows
+
+    # Kill stragglers on WSL port 8081 if any exist.
     STRAGGLER=$(ss -tlnp 'sport = :8081' 2>/dev/null | grep -oP 'pid=\K\d+' | head -1 || true)
     [[ -n "$STRAGGLER" ]] && kill "$STRAGGLER" 2>/dev/null || true
 
