@@ -15,7 +15,10 @@
 #   5. GAME EXITS → kill lightweight → REVIVE full 27B stack
 #
 # Usage:
-#   bash scripts/game-server/orchestrate-session.sh [game_name] [--no-resume]
+#   bash scripts/game-server/orchestrate-session.sh [game_name] [--no-resume] [--no-lightweight]
+#
+# Default: adaptive mode tries LFM2-8B when VRAM headroom is sufficient.
+# Use --no-lightweight for a clean remote-only gameplay run.
 
 set -euo pipefail
 
@@ -35,10 +38,12 @@ LIGHTWEIGHT_ALIAS="lfm2-8b-lightweight"
 # Game config
 GAME_NAME="${1:-mina_the_hollower}"
 NO_RESUME=0
+NO_LIGHTWEIGHT=0
 shift 2>/dev/null || true
 for arg in "$@"; do
     case "$arg" in
         --no-resume) NO_RESUME=1 ;;
+        --no-lightweight) NO_LIGHTWEIGHT=1 ;;
         mina_the_hollower|equinox_homecoming) GAME_NAME="$arg" ;;
     esac
 done
@@ -390,10 +395,12 @@ while [[ "$GAME_EXITED" -eq 0 ]]; do
         log "  ⏳ Tick $TICK | Game running | Tier: $CURRENT_TIER | VRAM: ${VRAM_NOW}/${VRAM_TOTAL} MB (${VRAM_FREE} free)"
 
         # Adaptive decision: if game VRAM dropped enough, try lightweight
-        if [[ "$CURRENT_TIER" == "remote" && "$VRAM_FREE" -ge "$VRAM_HEADROOM_LIGHTWEIGHT" ]]; then
+        if [[ "$NO_LIGHTWEIGHT" -eq 0 && "$CURRENT_TIER" == "remote" && "$VRAM_FREE" -ge "$VRAM_HEADROOM_LIGHTWEIGHT" ]]; then
             log "  → VRAM headroom sufficient (${VRAM_FREE} MB ≥ ${VRAM_HEADROOM_LIGHTWEIGHT} MB)"
             log "  → Trying lightweight model for better local responses..."
             launch_lightweight && log "  ✓ Switched to lightweight tier" || log "  ℹ Stayed on remote tier"
+        elif [[ "$NO_LIGHTWEIGHT" -eq 1 && "$CURRENT_TIER" == "remote" ]]; then
+            log "  ℹ Lightweight tier disabled (--no-lightweight); staying remote"
         fi
     fi
 done
