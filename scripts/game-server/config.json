@@ -32,5 +32,44 @@
       "sunshine_app_id": null
     }
   },
-  "default_game": "mina_the_hollower"
+  "default_game": "mina_the_hollower",
+  "streaming": {
+    "profiles": {
+      "default": {
+        "label": "Default",
+        "emoji": "🎯",
+        "resolution": "1920x1080",
+        "fps": 60,
+        "codec": "hevc",
+        "bitrate_mbps": 7,
+        "encoder_preset": "medium"
+      },
+      "safe": {
+        "label": "Safe",
+        "emoji": "🛡️",
+        "resolution": "1280x720",
+        "fps": 60,
+        "codec": "hevc",
+        "bitrate_mbps": 5,
+        "encoder_preset": "medium"
+      },
+      "experimental": {
+        "label": "Experimental",
+        "emoji": "🧪",
+        "resolution": "1920x1080",
+        "fps": 60,
+        "codec": "av1",
+        "bitrate_mbps": 6.5,
+        "encoder_preset": "high"
+      }
+    },
+    "active_profile": "default",
+    "notes": [
+      "Bitrate set on Moonlight client (iPad), not Sunshine",
+      "Leave 15-25% headroom below upload ceiling (~7-11 Mbps)",
+      "HEVC is sweet spot: better compression than H.264, more stable than AV1 on iPad",
+      "NVENC preset: medium/high quality, NOT ultra-fast",
+      "Avoid 1440p — needs >15 Mbps upload"
+    ]
+  }
 }
