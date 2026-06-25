@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remote Gaming Server — WatsonOW Architecture</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0a0e17;--surface:#111827;--card:#1a2235;--border:#2a3a52;
+--text:#c9d1d9;--muted:#6b7b8d;--accent:#00d4ff;--accent2:#7c3aed;
+--green:#10b981;--yellow:#f59e0b;--red:#ef4444;--orange:#f97316;
+--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.4);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,#0a0e17 0%,#1a1a2e 50%,#16213e 100%);overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(0,212,255,.08) 0%,transparent 50%),radial-gradient(circle at 70% 60%,rgba(124,58,237,.08) 0%,transparent 50%)}
+.hero-content{position:relative;z-index:1;max-width:900px;padding:40px}
+.hero-badge{display:inline-block;padding:6px 16px;border-radius:20px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--accent);font-size:.8rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;line-height:1.1}
+.hero p{font-size:1.25rem;color:var(--muted);max-width:600px;margin:0 auto 32px}
+.hero-stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap}
+.hero-stat{text-align:center;padding:16px 24px;background:rgba(255,255,255,.03);border-radius:var(--radius);border:1px solid var(--border)}
+.hero-stat .value{font-size:2rem;font-weight:700;color:#fff}
+.hero-stat .label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+/* SECTIONS */
+section{padding:80px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.section-label{display:inline-block;padding:4px 12px;border-radius:16px;background:rgba(0,212,255,.1);color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+h2{font-size:2.25rem;font-weight:700;color:#fff;margin-bottom:8px}
+.section-desc{color:var(--muted);max-width:700px;margin-bottom:48px;font-size:1.05rem}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color .2s}
+.card:hover{border-color:rgba(0,212,255,.3)}
+.card-grid{display:grid;gap:20px;margin-bottom:32px}
+.card-grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.card-grid.cols-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card-grid.cols-4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card h3{font-size:1.1rem;color:#fff;margin-bottom:8px}
+.card p,.card li{color:var(--muted);font-size:.95rem}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{text-align:left;padding:14px 16px;background:rgba(0,212,255,.06);color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.5px;font-size:.75rem;border-bottom:1px solid var(--border)}
+td{padding:12px 16px;border-bottom:1px solid rgba(42,58,82,.5);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(0,212,255,.03)}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green)}
+.badge-yellow{background:rgba(245,158,11,.15);color:var(--yellow)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red)}
+.badge-blue{background:rgba(0,212,255,.15);color:var(--accent)}
+
+/* RESOURCE BARS */
+.resource-bar{margin-bottom:16px}
+.resource-bar .bar-label{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px}
+.resource-bar .bar-track{height:24px;background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;position:relative}
+.resource-bar .bar-fill{height:100%;border-radius:12px;display:flex;align-items:center;padding-left:10px;font-size:.75rem;font-weight:600;color:#fff;transition:width .6s ease}
+.bar-blue{background:linear-gradient(90deg,#3b82f6,#06b6d4)}
+.bar-purple{background:linear-gradient(90deg,#8b5cf6,#7c3aed)}
+.bar-green{background:linear-gradient(90deg,#10b981,#059669)}
+.bar-red{background:linear-gradient(90deg,#ef4444,#dc2626)}
+.bar-yellow{background:linear-gradient(90deg,#f59e0b,#d97706)}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--accent2))}
+.timeline-item{position:relative;margin-bottom:24px;padding-left:24px}
+.timeline-item::before{content:'';position:absolute;left:-27px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
+.timeline-item h4{color:#fff;font-size:1rem;margin-bottom:4px}
+.timeline-item p{color:var(--muted);font-size:.9rem}
+
+/* CODE */
+code{background:rgba(0,212,255,.08);padding:2px 8px;border-radius:6px;font-family:'Cascadia Code','Fira Code',monospace;font-size:.85em;color:var(--accent)}
+pre{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;overflow-x:auto;margin:16px 0}
+pre code{background:none;padding:0;color:var(--text)}
+
+/* ARCHITECTURE DIAGRAM */
+.arch-diagram{display:flex;gap:24px;align-items:stretch;flex-wrap:wrap;justify-content:center;margin:32px 0}
+.arch-box{flex:1;min-width:280px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center}
+.arch-box h3{color:var(--accent);margin-bottom:16px;font-size:1rem;text-transform:uppercase;letter-spacing:1px}
+.arch-box ul{list-style:none;text-align:left;padding:0}
+.arch-box li{padding:6px 0;border-bottom:1px solid rgba(42,58,82,.3);font-size:.9rem;color:var(--text)}
+.arch-box li:last-child{border-bottom:none}
+.arch-arrow{display:flex;align-items:center;font-size:2rem;color:var(--accent);padding:0 8px}
+
+/* RISK MATRIX */
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.risk-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.risk-card .risk-title{color:#fff;font-weight:600;margin-bottom:8px}
+.risk-card .risk-meta{display:flex;gap:8px;margin-bottom:8px}
+.risk-card .risk-mitigation{color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);padding-top:8px;margin-top:8px}
+
+/* ROADMAP */
+.roadmap{display:grid;gap:20px}
+.roadmap-step{display:flex;gap:20px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.roadmap-num{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff}
+.roadmap-content h3{color:#fff;margin-bottom:4px}
+.roadmap-content p{color:var(--muted);font-size:.9rem}
+
+/* FOOTER */
+footer{text-align:center;padding:48px 0;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
+
+@media(max-width:768px){
+.hero h1{font-size:2rem}
+.arch-diagram{flex-direction:column}
+.arch-arrow{transform:rotate(90deg)}
+.card-grid.cols-3,.card-grid.cols-4{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+<div class="hero-content">
+<div class="hero-badge">WatsonOW · Remote Gaming Architecture</div>
+<h1>Remote Gaming Server</h1>
+<p>Turn your PC into a personal game streaming server. Zsani plays from her iPad or laptop — Watson orchestrates everything.</p>
+<div class="hero-stats">
+<div class="hero-stat"><div class="value">Ryzen 7</div><div class="label">CPU · 5800X</div></div>
+<div class="hero-stat"><div class="value">RTX 5070 Ti</div><div class="label">GPU · 16GB VRAM</div></div>
+<div class="hero-stat"><div class="value">16 GB</div><div class="label">System RAM</div></div>
+<div class="hero-stat"><div class="value">NVENC</div><div class="label">Hardware Encode</div></div>
+</div>
+</div>
+</header>
+
+<!-- PLATFORM COMPARISON -->
+<section>
+<div class="container">
+<span class="section-label">Platform Analysis</span>
+<h2>Streaming Platform Comparison</h2>
+<p class="section-desc">Research-verified comparison of remote gaming solutions. Moonlight + Sunshine is the clear winner for iPad compatibility, latency, and controller support.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Solution</th><th>iPad App</th><th>Controller</th><th>Latency</th><th>Setup</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><strong style="color:var(--accent)">Moonlight + Sunshine</strong></td><td><span class="badge badge-green">✅ Native</span></td><td><span class="badge badge-green">Full</span></td><td>⭐⭐⭐⭐⭐</td><td>Moderate</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>Steam Remote Play</td><td><span class="badge badge-green">✅ Active</span></td><td><span class="badge badge-green">Good</span></td><td>⭐⭐⭐⭐</td><td>Easy</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>Parsec</td><td><span class="badge badge-red">❌ None</span></td><td><span class="badge badge-green">Excellent</span></td><td>⭐⭐⭐⭐</td><td>Easy</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>NVIDIA GameStream</td><td><span class="badge badge-red">Dead</span></td><td>—</td><td>—</td><td>—</td><td><span class="badge badge-red">Deprecated</span></td></tr>
+<tr><td>RustDesk Gaming</td><td><span class="badge badge-yellow">⚠️ Basic</span></td><td><span class="badge badge-yellow">Limited</span></td><td>⭐⭐</td><td>Easy</td><td><span class="badge badge-yellow">Not gaming-first</span></td></tr>
+</tbody>
+</table>
+</div>
+<div style="margin-top:24px" class="card-grid cols-3">
+<div class="card"><h3>🏆 Moonlight + Sunshine</h3><p>Best latency, native iPad app, full controller passthrough, open source, lowest overhead (~100MB RAM)</p></div>
+<div class="card"><h3>🎮 Steam Remote Play</h3><p>Easiest setup for Steam games. iOS app is active and functional — good fallback option.</p></div>
+<div class="card"><h3>⚠️ Parsec</h3><p>Excellent on desktop but NO iPad/iOS client. Not suitable if iPad support matters.</p></div>
+</div>
+</div>
+</section>
+
+<!-- RESOURCE ANALYSIS -->
+<section>
+<div class="container">
+<span class="section-label">Resource Analysis</span>
+<h2>VRAM & RAM Conflict</h2>
+<p class="section-desc">The game and LLM cannot run simultaneously on 16GB/16GB hardware. Watson auto-pauses before gaming and resumes after.</p>
+
+<div class="card-grid cols-2">
+<div class="card">
+<h3>🎮 VRAM Usage</h3>
+<div style="margin-top:16px">
+<div class="resource-bar"><div class="bar-label"><span>Equinox: Homecoming (€14.79)</span><span>4–8 GB</span></div><div class="bar-track"><div class="bar-fill bar-blue" style="width:50%">50%</div></div></div>
+<div class="resource-bar"><div class="bar-label"><span>llama.cpp 27B (Q3)</span><span>11–13 GB</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:80%">80%</div></div></div>
+<div class="resource-bar"><div class="bar-label"><span>Combined</span><span style="color:var(--red)">16–22 GB ❌</span></div><div class="bar-track"><div class="bar-fill bar-red" style="width:100%">OVERFLOW</div></div></div>
+<div class="resource-bar"><div class="bar-label"><span>Sunshine encoder</span><span>~100–300 MB</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:2%">minimal</div></div></div>
+</div>
+</div>
+<div class="card">
+<h3>💾 System RAM Usage</h3>
+<div style="margin-top:16px">
+<div class="resource-bar"><div class="bar-label"><span>Equinox: Homecoming (€14.79)</span><span>8–12 GB</span></div><div class="bar-track"><div class="bar-fill bar-blue" style="width:75%">75%</div></div></div>
+<div class="resource-bar"><div class="bar-label"><span>llama.cpp 27B</span><span>~2 GB</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:13%">13%</div></div></div>
+<div class="resource-bar"><div class="bar-label"><span>Windows + WSL overhead</span><span>2–4 GB</span></div><div class="bar-track"><div class="bar-fill bar-yellow" style="width:25%">25%</div></div></div>
+<div class="resource-bar"><div class="bar-label"><span>Combined</span><span style="color:var(--yellow)">12–18 GB ⚠️</span></div><div class="bar-track"><div class="bar-fill bar-yellow" style="width:95%">TIGHT</div></div></div>
+</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h3>✅ Solution: Watson Auto-Pause System</h3>
+<p>The game session flow ensures zero resource conflicts:</p>
+<div class="timeline" style="margin-top:16px">
+<div class="timeline-item"><h4>Zsani requests game via Discord</h4><p>"Hey Watson, play Equinox"</p></div>
+<div class="timeline-item"><h4>Watson pauses llama.cpp</h4><p>Stops GPU inference — frees 11-13 GB VRAM</p></div>
+<div class="timeline-item"><h4>Sunshine host is already running</h4><p>Lightweight encoder ready (~100MB overhead)</p></div>
+<div class="timeline-item"><h4>Watson launches Equinox via Steam</h4><p><code>steam.exe -applaunch APPID</code></p></div>
+<div class="timeline-item"><h4>Zsani connects via Moonlight client</h4><p>iPad or laptop — gameplay begins</p></div>
+<div class="timeline-item"><h4>Game exits → Watson detects process end</h4><p>Process monitor watches for game closure</p></div>
+<div class="timeline-item"><h4>Watson restarts llama.cpp</h4><p>5-second GPU settle delay, then back online</p></div>
+<div class="timeline-item"><h4>Discord notification: "Watson back"</h4><p>All systems restored to normal operation</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section>
+<div class="container">
+<span class="section-label">System Design</span>
+<h2>Architecture</h2>
+<p class="section-desc">Client-driven streaming with Watson orchestration. Sunshine handles encoding, Moonlight decodes, controllers passthrough seamlessly.</p>
+
+<div class="arch-diagram">
+<div class="arch-box" style="border-color:rgba(0,212,255,.3)">
+<h3>📱 Zsani's Device</h3>
+<ul>
+<li>Moonlight Client (iPad / Laptop)</li>
+<li>Bluetooth Controller → relayed through stream</li>
+<li>H.264/HEVC hardware decode</li>
+<li>Tailscale VPN connection</li>
+</ul>
+</div>
+<div class="arch-arrow">⇄</div>
+<div class="arch-box" style="border-color:rgba(124,58,237,.3)">
+<h3>🖥️ Juan's PC (Host)</h3>
+<ul>
+<li>Sunshine Host (NVENC encoder)</li>
+<li>Steam + Equinox: Homecoming (€14.79)</li>
+<li>WSL2 → Hermes Agent</li>
+<li>llama.cpp (paused during game)</li>
+</ul>
+</div>
+</div>
+
+<div class="card-grid cols-3" style="margin-top:32px">
+<div class="card"><h3>🌐 Network</h3><p>UDP: 47998, 47999, 48000, 48010<br>TCP: 47984, 47989, 47990<br>Tailscale VPN recommended</p></div>
+<div class="card"><h3>🎮 Controllers</h3><p>BT controller → iPad → Moonlight captures → Sunshine virtual Xbox controller → Game</p></div>
+<div class="card"><h3>⚡ Encoder</h3><p>NVENC · H.264/HEVC · P1/P2 preset<br>CBR · 15-25 Mbps · 1080p60</p></div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h3>📡 How Sunshine Sessions Work</h3>
+<p>Sunshine does <strong>NOT</strong> have a "start stream via API" command. Stream sessions are <strong>client-driven</strong>:</p>
+<ol style="color:var(--muted);padding-left:24px;margin-top:8px">
+<li>Moonlight client connects to Sunshine</li>
+<li>Moonlight selects an advertised app/desktop</li>
+<li>Sunshine launches the configured target app and starts streaming</li>
+</ol>
+<p style="margin-top:8px"><strong>Automation pattern:</strong> Watson pre-launches the game, Zsani connects via Moonlight selecting the game entry.</p>
+</div>
+</div>
+</section>
+
+<!-- NVENC SETTINGS -->
+<section>
+<div class="container">
+<span class="section-label">Encoder Configuration</span>
+<h2>NVENC Settings (RTX 5070 Ti)</h2>
+<p class="section-desc">Optimized for lowest latency over internet. Prioritize encode speed and stable bitrate over maximum compression.</p>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>Setting</th><th>Value</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td>Encoder</td><td><code>NVENC</code></td><td>Hardware encoding, minimal CPU overhead</td></tr>
+<tr><td>Codec</td><td><code>H.264</code> or <code>HEVC</code></td><td>H.264 safest, HEVC better quality/bitrate</td></tr>
+<tr><td>Preset</td><td><code>P1</code> or <code>P2</code></td><td>Lowest encode latency</td></tr>
+<tr><td>Rate Control</td><td><code>CBR</code></td><td>Stable bitrate for internet streaming</td></tr>
+<tr><td>Lookahead</td><td><code>Off</code></td><td>Reduce encode delay</td></tr>
+<tr><td>B-Frames</td><td><code>Disabled</code></td><td>Lowest latency</td></tr>
+<tr><td>Resolution</td><td><code>1080p60</code> or <code>1440p60</code></td><td>Sweet spot for latency vs quality</td></tr>
+<tr><td>Bitrate (1080p)</td><td><code>15-25 Mbps</code></td><td>Adjust based on uplink speed</td></tr>
+<tr><td>Bitrate (1440p)</td><td><code>25-40 Mbps</code></td><td>If network supports it</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- IMPLEMENTATION ROADMAP -->
+<section>
+<div class="container">
+<span class="section-label">Execution Plan</span>
+<h2>Implementation Roadmap</h2>
+<p class="section-desc">Six phases from installation to full Watson-orchestrated game sessions.</p>
+
+<div class="roadmap">
+<div class="roadmap-step">
+<div class="roadmap-num">1</div>
+<div class="roadmap-content"><h3>Install Sunshine on Windows Host</h3><p>Download from GitHub, configure NVENC encoder, add Equinox as app entry, test LAN pairing with Moonlight.</p></div>
+</div>
+<div class="roadmap-step">
+<div class="roadmap-num">2</div>
+<div class="roadmap-content"><h3>Network Setup</h3><p>Tailscale VPN between Juan's PC and Zsani's devices — no port forwarding needed, clean NAT traversal.</p></div>
+</div>
+<div class="roadmap-step">
+<div class="roadmap-num">3</div>
+<div class="roadmap-content"><h3>Install Moonlight on Client Devices</h3><p>iPad: App Store. Laptop: moonlight-stream.org. Pair with Sunshine PIN.</p></div>
+</div>
+<div class="roadmap-step">
+<div class="roadmap-num">4</div>
+<div class="roadmap-content"><h3>Watson Orchestration Scripts</h3><p>PowerShell scripts: pause Watson → launch game → monitor process → resume on exit. WSL orchestrator calls Windows scripts.</p></div>
+</div>
+<div class="roadmap-step">
+<div class="roadmap-num">5</div>
+<div class="roadmap-content"><h3>Discord Integration</h3><p>Watson listens for game requests, parses game name, executes full session pipeline, notifies on ready and complete.</p></div>
+</div>
+<div class="roadmap-step">
+<div class="roadmap-num">6</div>
+<div class="roadmap-content"><h3>Testing & Tuning</h3><p>Measure latency, adjust bitrate, test controller passthrough, verify auto-pause/resume cycle.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- RISK ASSESSMENT -->
+<section>
+<div class="container">
+<span class="section-label">Risk Management</span>
+<h2>Risk Assessment</h2>
+<p class="section-desc">Known risks with mitigation strategies.</p>
+
+<div class="risk-grid">
+<div class="risk-card">
+<div class="risk-title">VRAM Conflict: Game + LLM</div>
+<div class="risk-meta"><span class="badge badge-red">Certain</span><span class="badge badge-red">Critical Impact</span></div>
+<div class="risk-mitigation">Auto-pause Watson before game. Resume after game exits via process monitor.</div>
+</div>
+<div class="risk-card">
+<div class="risk-title">High Latency Over Internet</div>
+<div class="risk-meta"><span class="badge badge-yellow">Medium</span><span class="badge badge-red">High Impact</span></div>
+<div class="risk-mitigation">Tailscale VPN, Ethernet on host, 5GHz Wi-Fi on client, bitrate tuning.</div>
+</div>
+<div class="risk-card">
+<div class="risk-title">Controller Passthrough Issues</div>
+<div class="risk-meta"><span class="badge badge-yellow">Low-Medium</span><span class="badge badge-yellow">Medium Impact</span></div>
+<div class="risk-mitigation">Test thoroughly with Moonlight iOS app. Core stick/button/trigger works reliably.</div>
+</div>
+<div class="risk-card">
+<div class="risk-title">16GB System RAM Pressure</div>
+<div class="risk-meta"><span class="badge badge-yellow">Medium</span><span class="badge badge-yellow">Medium Impact</span></div>
+<div class="risk-mitigation">Close background apps during game sessions. Watson paused frees ~2GB.</div>
+</div>
+<div class="risk-card">
+<div class="risk-title">Sunshine/Moonlight Pairing Fails</div>
+<div class="risk-meta"><span class="badge badge-green">Low</span><span class="badge badge-yellow">Medium Impact</span></div>
+<div class="risk-mitigation">Steam Link as fallback. Both support iPad.</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- BUDGET -->
+<section>
+<div class="container">
+<span class="section-label">Cost Estimate</span>
+<h2>Resource Budget</h2>
+<p class="section-desc">Total project cost is minimal — most components are free and open source.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Item</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td>Sunshine</td><td><span class="badge badge-green">Free</span></td></tr>
+<tr><td>Moonlight</td><td><span class="badge badge-green">Free</span></td></tr>
+<tr><td>Tailscale VPN</td><td><span class="badge badge-green">Free tier</span></td></tr>
+<tr><td>Equinox: Homecoming (€14.79)</td><td>~€20-30</td></tr>
+<tr><td>Bluetooth Controller (if needed)</td><td>~€30-50</td></tr>
+<tr style="font-weight:700"><td>Total</td><td style="color:var(--accent)">~€50-80</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- OPEN ITEMS -->
+<section>
+<div class="container">
+<span class="section-label">Next Steps</span>
+<h2>Open Items</h2>
+<p class="section-desc">Items to verify and complete before full deployment.</p>
+<div class="card-grid cols-2">
+<div class="card"><h3>🔍 Verify Equinox APPID</h3><p>Look up exact Steam APPID on store page. Update config.json and orchestrate-game.sh.</p></div>
+<div class="card"><h3>🌐 Test Internet Streaming</h3><p>Sunshine + Moonlight over internet (not just LAN). Measure actual latency.</p></div>
+<div class="card"><h3>📊 Determine Optimal Bitrate</h3><p>Test with Juan's specific upload speed. Start at 15 Mbps, adjust up.</p></div>
+<div class="card"><h3>🎮 Test iPad Controller Passthrough</h3><p>Verify Bluetooth controller on iPad relays correctly through Moonlight → Sunshine.</p></div>
+<div class="card"><h3>⚙️ Install Sunshine on Windows</h3><p>Run install-sunshine.ps1 or manual GitHub download. Configure NVENC settings.</p></div>
+<div class="card"><h3>🤖 Discord Command Integration</h3><p>Watson listens for "play [game]" commands, executes full orchestration pipeline.</p></div>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="container">
+<p>Remote Gaming Server Architecture · WatsonOW · June 2026</p>
+<p style="margin-top:8px;font-size:.75rem;color:var(--muted)">Generated by Watson · All research verified via GPT-5.4 delegation</p>
+</div>
+</footer>
+
+</body>
+</html>

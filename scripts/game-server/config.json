@@ -1,0 +1,36 @@
+{
+  "sunshine": {
+    "web_url": "https://localhost:47990",
+    "api_port": 47984,
+    "udp_ports": [47998, 47999, 48000],
+    "tcp_ports": [47984, 47989, 47990]
+  },
+  "inference": {
+    "llama_host": "172.24.16.1",
+    "llama_port": 8080,
+    "litellm_host": "172.24.16.1",
+    "litellm_port": 4000,
+    "stack_script": "C:\\Users\\Admin\\PROJECTS\\zerotier-llm-proxy\\scripts\\windows\\Start-Qwen36ZeroTierStack.ps1",
+    "profile": "hermes-qwen36-64k",
+    "model_alias": "qwen36-turbo-hermes"
+  },
+  "games": {
+    "mina_the_hollower": {
+      "name": "Mina: The Hollower",
+      "exe": "D:\\GAMES\\Mina.the.Hollower.v1.0.6\\Mina.the.Hollower.v1.0.6\\MinaTheHollower.exe",
+      "working_dir": "D:\\GAMES\\Mina.the.Hollower.v1.0.6\\Mina.the.Hollower.v1.0.6",
+      "process_name": "MinaTheHollower",
+      "steam_appid": null,
+      "sunshine_app_id": null
+    },
+    "equinox_homecoming": {
+      "name": "Equinox: Homecoming",
+      "exe": null,
+      "working_dir": "C:\\Program Files (x86)\\Steam",
+      "process_name": null,
+      "steam_appid": 3258290,
+      "sunshine_app_id": null
+    }
+  },
+  "default_game": "mina_the_hollower"
+}
